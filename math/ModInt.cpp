@@ -121,6 +121,8 @@ struct ModInt {
     }
 };
 
+// examples
+
 void ABC_242_C() {
     int N;
     cin >> N;
