@@ -25,6 +25,7 @@ struct BellmanFord {
     bool built;
     bool negative_cycle;
 
+    // 初期化: BellmanFord(頂点数, 有向グラフならtrue)
     BellmanFord(int n, bool directed = true)
         : n(n),
           directed(directed),
@@ -38,6 +39,7 @@ struct BellmanFord {
     int add_edge(int from, int to, T cost) {
         assert(0 <= from && from < n);
         assert(0 <= to && to < n);
+        assert(edge_count < numeric_limits<int>::max());
 
         int id = edge_count++;
 
@@ -53,6 +55,7 @@ struct BellmanFord {
     }
 
     // 最短距離計算: build(始点)
+    // 前提: 緩和で計算される距離が T の表現範囲内
     void build(int start) {
         assert(0 <= start && start < n);
 
@@ -74,7 +77,12 @@ struct BellmanFord {
             for (const auto& e : edges) {
                 if (!reached[e.from]) continue;
 
-                T nd = distance[e.from] + e.cost;
+                T nd;
+
+                if (!add_without_overflow(distance[e.from], e.cost, nd)) {
+                    assert(false && "distance is outside the range of T");
+                    continue;
+                }
 
                 if (!reached[e.to] || nd < distance[e.to]) {
                     distance[e.to] = nd;
@@ -94,7 +102,12 @@ struct BellmanFord {
         for (const auto& e : edges) {
             if (!reached[e.from]) continue;
 
-            T nd = distance[e.from] + e.cost;
+            T nd;
+
+            if (!add_without_overflow(distance[e.from], e.cost, nd)) {
+                assert(false && "distance is outside the range of T");
+                continue;
+            }
 
             if (!reached[e.to] || nd < distance[e.to]) {
                 negative[e.to] = true;
@@ -125,7 +138,7 @@ struct BellmanFord {
         built = true;
     }
 
-    // 距離取得: dist(頂点)
+    // 距離取得: dist(頂点) -> 到達不能の場合は T{}、判定には reachable() を使用
     T dist(int v) const {
         assert(built);
         assert(0 <= v && v < n);
@@ -192,5 +205,20 @@ struct BellmanFord {
         reverse(path_edges.begin(), path_edges.end());
 
         return path_edges;
+    }
+
+private:
+    static bool add_without_overflow(T a, T b, T& result) {
+        if constexpr (is_integral_v<T>) {
+            if constexpr (is_signed_v<T>) {
+                if (b > 0 && a > numeric_limits<T>::max() - b) return false;
+                if (b < 0 && a < numeric_limits<T>::lowest() - b) return false;
+            } else {
+                if (a > numeric_limits<T>::max() - b) return false;
+            }
+        }
+
+        result = a + b;
+        return true;
     }
 };
