@@ -12,20 +12,22 @@ struct CycleDetection {
     vector<int> cycle_vertices;
     vector<int> cycle_edges;
 
+    // 初期化: CycleDetection(頂点数, 有向グラフならtrue)
     CycleDetection(int n, bool directed)
         : n(n),
           directed(directed),
           edge_count(0),
-          graph(n),
           searched(false),
           cycle_exists(false) {
         assert(n >= 0);
+        graph.resize(n);
     }
 
     // 辺追加: add_edge(頂点u, 頂点v) -> 追加した辺ID
     int add_edge(int u, int v) {
         assert(0 <= u && u < n);
         assert(0 <= v && v < n);
+        assert(edge_count < numeric_limits<int>::max());
 
         int edge_id = edge_count++;
 
@@ -48,13 +50,13 @@ struct CycleDetection {
         return cycle_exists;
     }
 
-    // サイクルの頂点列を取得
+    // サイクルの頂点列: get_cycle_vertices() -> 辺数と同じ長さの頂点列
     vector<int> get_cycle_vertices() {
         search();
         return cycle_vertices;
     }
 
-    // サイクルの辺ID列を取得
+    // サイクルの辺ID列: get_cycle_edges() -> 頂点列に対応する辺ID列
     vector<int> get_cycle_edges() {
         search();
         return cycle_edges;
@@ -101,7 +103,6 @@ private:
 
         // 0: 未訪問, 1: 探索中, 2: 探索完了
         vector<int> state(n, 0);
-
         vector<int> parent_vertex(n, -1);
         vector<int> parent_edge(n, -1);
         vector<int> next_index(n, 0);
