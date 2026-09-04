@@ -7,8 +7,9 @@ struct UnionFind {
     vector<int> parent_or_size;
 
     // 初期化: UnionFind(頂点数) -> 各頂点が独立した連結成分の状態で構築
-    UnionFind(int n) : n(n), group_count(n), parent_or_size(n, -1) {
+    UnionFind(int n) : n(n), group_count(n) {
         assert(n >= 0);
+        parent_or_size.assign(n, -1);
     }
 
     // 代表元: leader(頂点v) -> v が属する連結成分の代表元
@@ -48,7 +49,7 @@ struct UnionFind {
     }
 
     // 連結成分数: count() -> 現在の連結成分数
-    int count() {
+    int count() const {
         return group_count;
     }
 
