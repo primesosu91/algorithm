@@ -8,27 +8,34 @@ struct SegmentTree {
     vector<T> data;
 
     // 初期化: SegmentTree(要素数)
+    // 前提: 0 <= 要素数 <= 2^30
     SegmentTree(int n) : n(n) {
+        assert(n >= 0);
+        assert(n <= (1 << 30));
+
         size = 1;
         while (size < n) size *= 2;
 
-        data.assign(2 * size, e());
+        data.assign((size_t)2 * size, e());
     }
 
     // 初期化: SegmentTree(初期配列)
+    // 前提: 要素数 <= 2^30
     SegmentTree(const vector<T>& v) : n((int)v.size()) {
+        assert(v.size() <= (size_t)(1 << 30));
+
         size = 1;
         while (size < n) size *= 2;
 
-        data.assign(2 * size, e());
+        data.assign((size_t)2 * size, e());
 
         // 葉に初期値を設定
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n; ++i) {
             data[size + i] = v[i];
         }
 
         // 親を構築
-        for (int i = size - 1; i >= 1; i--) {
+        for (int i = size - 1; i >= 1; --i) {
             data[i] = op(data[2 * i], data[2 * i + 1]);
         }
     }
@@ -48,14 +55,14 @@ struct SegmentTree {
     }
 
     // 取得: get(位置) -> 現在値
-    T get(int pos) {
+    T get(int pos) const {
         assert(0 <= pos && pos < n);
 
         return data[size + pos];
     }
 
     // 区間取得: prod(左端, 右端) -> [left, right)
-    T prod(int left, int right) {
+    T prod(int left, int right) const {
         assert(0 <= left && left <= right && right <= n);
 
         T left_value = e();
@@ -67,11 +74,11 @@ struct SegmentTree {
         while (left < right) {
             if (left % 2 == 1) {
                 left_value = op(left_value, data[left]);
-                left++;
+                ++left;
             }
 
             if (right % 2 == 1) {
-                right--;
+                --right;
                 right_value = op(data[right], right_value);
             }
 
@@ -83,7 +90,7 @@ struct SegmentTree {
     }
 
     // 全区間取得: all_prod() -> [0, n)
-    T all_prod() {
+    T all_prod() const {
         return data[1];
     }
 
@@ -91,7 +98,7 @@ struct SegmentTree {
     // f(prod(left, right)) が true となる最大の right を返す
     // 前提: f(e()) == true、判定に単調性がある
     template<class F>
-    int max_right(int left, F f) {
+    int max_right(int left, F f) const {
         assert(0 <= left && left <= n);
         assert(f(e()));
 
@@ -111,7 +118,7 @@ struct SegmentTree {
 
                     if (f(op(value, data[left]))) {
                         value = op(value, data[left]);
-                        left++;
+                        ++left;
                     }
                 }
 
@@ -119,7 +126,7 @@ struct SegmentTree {
             }
 
             value = op(value, data[left]);
-            left++;
+            ++left;
 
         } while ((left & -left) != left);
 
@@ -130,7 +137,7 @@ struct SegmentTree {
     // f(prod(left, right)) が true となる最小の left を返す
     // 前提: f(e()) == true、判定に単調性がある
     template<class F>
-    int min_left(int right, F f) {
+    int min_left(int right, F f) const {
         assert(0 <= right && right <= n);
         assert(f(e()));
 
@@ -140,7 +147,7 @@ struct SegmentTree {
         T value = e();
 
         do {
-            right--;
+            --right;
 
             while (right > 1 && right % 2 == 1) {
                 right /= 2;
@@ -152,7 +159,7 @@ struct SegmentTree {
 
                     if (f(op(data[right], value))) {
                         value = op(data[right], value);
-                        right--;
+                        --right;
                     }
                 }
 
