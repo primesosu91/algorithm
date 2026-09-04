@@ -19,6 +19,7 @@ struct Dijkstra {
     bool built;
     int start;
     vector<T> distance;
+    vector<bool> reached;
     vector<int> parent_vertex;
     vector<int> parent_edge;
 
@@ -27,21 +28,23 @@ struct Dijkstra {
         : n(n),
           directed(directed),
           edge_count(0),
-          graph(n),
           built(false),
-          start(-1),
-          distance(n, INF),
-          parent_vertex(n, -1),
-          parent_edge(n, -1) {
+          start(-1) {
         assert(n >= 0);
+
+        graph.resize(n);
+        distance.assign(n, INF);
+        reached.assign(n, false);
+        parent_vertex.assign(n, -1);
+        parent_edge.assign(n, -1);
     }
 
     // 辺追加: add_edge(始点, 終点, 重み) -> 追加した辺ID
     int add_edge(int from, int to, T cost) {
         assert(0 <= from && from < n);
         assert(0 <= to && to < n);
-        assert(cost >= 0);
-        assert(cost < INF);
+        assert(cost >= T{});
+        assert(edge_count < numeric_limits<int>::max());
 
         int edge_id = edge_count++;
 
@@ -57,11 +60,13 @@ struct Dijkstra {
     }
 
     // 最短経路を計算: build(始点)
+    // 前提: 計算される最短距離が T の表現範囲内
     void build(int start) {
         assert(0 <= start && start < n);
 
         this->start = start;
         distance.assign(n, INF);
+        reached.assign(n, false);
         parent_vertex.assign(n, -1);
         parent_edge.assign(n, -1);
 
@@ -71,8 +76,9 @@ struct Dijkstra {
             greater<pair<T, int>>
         > que;
 
-        distance[start] = 0;
-        que.push({0, start});
+        distance[start] = T{};
+        reached[start] = true;
+        que.push({T{}, start});
 
         while (!que.empty()) {
             auto [current_dist, v] = que.top();
@@ -84,15 +90,16 @@ struct Dijkstra {
             }
 
             for (const Edge& edge : graph[v]) {
-                // INF以上になる距離は扱わない
-                if (distance[v] > INF - edge.cost) {
+                T new_dist;
+
+                if (!add_without_overflow(distance[v], edge.cost, new_dist)) {
+                    assert(false && "shortest distance is outside the range of T");
                     continue;
                 }
 
-                T new_dist = distance[v] + edge.cost;
-
-                if (new_dist < distance[edge.to]) {
+                if (!reached[edge.to] || new_dist < distance[edge.to]) {
                     distance[edge.to] = new_dist;
+                    reached[edge.to] = true;
                     parent_vertex[edge.to] = v;
                     parent_edge[edge.to] = edge.id;
 
@@ -105,6 +112,7 @@ struct Dijkstra {
     }
 
     // 最短距離: dist(頂点v) -> 始点からvまでの最短距離
+    // 到達不能の場合は INF、判定には reachable() を使用
     T dist(int v) const {
         assert(built);
         assert(0 <= v && v < n);
@@ -117,10 +125,10 @@ struct Dijkstra {
         assert(built);
         assert(0 <= v && v < n);
 
-        return distance[v] != INF;
+        return reached[v];
     }
 
-    // 最短経路の頂点列を取得
+    // 最短経路の頂点列: get_path(終点) -> 始点から終点までの頂点列
     vector<int> get_path(int v) const {
         assert(built);
         assert(0 <= v && v < n);
@@ -141,7 +149,7 @@ struct Dijkstra {
         return path;
     }
 
-    // 最短経路の辺ID列を取得
+    // 最短経路の辺ID列: get_path_edges(終点) -> 始点から終点までの辺ID列
     vector<int> get_path_edges(int v) const {
         assert(built);
         assert(0 <= v && v < n);
@@ -160,6 +168,21 @@ struct Dijkstra {
         reverse(edges.begin(), edges.end());
 
         return edges;
+    }
+
+private:
+    static bool add_without_overflow(T a, T b, T& result) {
+        if constexpr (is_integral_v<T>) {
+            if constexpr (is_signed_v<T>) {
+                if (b > 0 && a > numeric_limits<T>::max() - b) return false;
+                if (b < 0 && a < numeric_limits<T>::lowest() - b) return false;
+            } else {
+                if (a > numeric_limits<T>::max() - b) return false;
+            }
+        }
+
+        result = a + b;
+        return true;
     }
 };
 
