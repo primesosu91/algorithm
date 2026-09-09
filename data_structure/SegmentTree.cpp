@@ -176,12 +176,35 @@ struct SegmentTree {
 
 // examples
 
-long long op(long long a, long long b) {
+long long op_sum(long long a, long long b) {
     return a + b;
 }
 
-long long e() {
+long long e_sum() {
     return 0LL;
+}
+
+long long op_max(long long a, long long b) {
+    return max(a, b);
+}
+
+long long e_max() {
+    return LLONG_MIN;
+}
+
+struct S_ABC_223 {
+    int sum;
+    int sum_min;
+};
+
+S_ABC_223 op_ABC_223(S_ABC_223 a, S_ABC_223 b) {
+    int sum = a.sum + b.sum;
+    int sum_min = min(a.sum_min, a.sum + b.sum_min);
+    return {sum, sum_min};
+}
+
+S_ABC_223 e_ABC_223() {
+    return {0, 0};
 }
 
 void yosupo_judge_Point_Add_Range_Sum() {
@@ -189,7 +212,7 @@ void yosupo_judge_Point_Add_Range_Sum() {
     cin >> N >> Q;
     vector<long long> a(N);
     for (int i = 0; i < N; i ++) cin >> a[i];
-    SegmentTree<long long, op, e> seg(a);
+    SegmentTree<long long, op_sum, e_sum> seg(a);
     for (int q = 0; q < Q; q ++) {
         int query;
         cin >> query;
@@ -206,6 +229,84 @@ void yosupo_judge_Point_Add_Range_Sum() {
     }
 }
 
+void ABL_D() {
+    int N, K;
+    cin >> N >> K;
+    int MAX = 300000;
+    vector<long long> dp(MAX + 1, 0);
+    SegmentTree<long long, op_max, e_max> seg(dp);
+    for (int i = 0; i < N; i ++) {
+        int A;
+        cin >> A;
+        int left = max(0, A - K);
+        int right = min(MAX, A + K);
+        int v = seg.prod(left, right + 1);
+        dp[A] = v + 1;
+        seg.set(A, dp[A]);
+    }
+    cout << seg.all_prod() << endl;
+}
+
+void ABC_223_F() {
+    int N, Q;
+    string S;
+    cin >> N >> Q >> S;
+    vector<S_ABC_223> a(N);
+    for (int i = 0; i < N; i ++) {
+        if (S[i] == '(') a[i] = {1, 1};
+        else a[i] = {-1, -1};
+    }
+    SegmentTree<S_ABC_223, op_ABC_223, e_ABC_223> seg(a);
+    for (int q = 0; q < Q; q ++) {
+        int query, l, r;
+        cin >> query >> l >> r;
+        l --, r --;
+        if (query == 1) {
+            swap(a[l], a[r]);
+            seg.set(l, a[l]);
+            seg.set(r, a[r]);
+        } else {
+            S_ABC_223 val = seg.prod(l, r + 1);
+            if (val.sum == 0 && val.sum_min == 0) cout << "Yes" << endl;
+            else cout << "No" << endl;
+        }
+    }
+}
+
+void ACL_J() {
+    int N, Q;
+    cin >> N >> Q;
+    vector<long long> A(N);
+    for (int i = 0; i < N; i ++) cin >> A[i];
+    SegmentTree<long long, op_max, e_max> seg(A);
+    for (int q = 0; q < Q; q ++) {
+        int query;
+        cin >> query;
+        if (query == 1) {
+            int X, V;
+            cin >> X >> V;
+            X --;
+            seg.set(X, V);
+        } else if (query == 2) {
+            int L, R;
+            cin >> L >> R;
+            L --;
+            cout << seg.prod(L, R) << endl;
+        } else {
+            int X, V;
+            cin >> X >> V;
+            X --;
+            auto f = [&](long long val) {
+                return V > val;
+            };
+            cout << seg.max_right(X, f) + 1 << endl;
+        }
+    }
+}
+
 int main() {
     yosupo_judge_Point_Add_Range_Sum();
+    // ABL_D; 隣り合う項の差の絶対値がK未満の最長部分列
+    // ABC_223_F(); 部分列が正しいカッコ列か判定
+    // ACL_J();
 }
