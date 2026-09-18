@@ -51,6 +51,7 @@ private:
         return node;
     }
 
+    // 分割: 比較順で value より前の要素と、それ以外に分ける
     pair<Node*, Node*> split(Node* node, const T& value) {
         if (!node) return {nullptr, nullptr};
 
@@ -81,6 +82,7 @@ private:
         }
     }
 
+    // 結合: left の全要素が right より前にある2木を結合
     Node* merge(Node* left, Node* right) {
         if (!left) {
             if (right) right->parent = nullptr;
@@ -111,6 +113,7 @@ private:
         }
     }
 
+    // 挿入: 優先度に従ってノードを追加し、親と部分木サイズを更新
     Node* insert_node(Node* node, Node* new_node) {
         if (!node) return new_node;
 
@@ -142,6 +145,7 @@ private:
         return node;
     }
 
+    // 削除: 対象ノードの左右の部分木を結合
     Node* erase_node(Node* node, const T& value, bool& erased) {
         if (!node) return nullptr;
 
@@ -192,6 +196,7 @@ public:
         friend struct OrderedSet;
 
     public:
+        // 初期化: iterator() -> 未所属のイテレータ
         iterator()
             : node(nullptr), owner(nullptr) {}
 
@@ -283,11 +288,14 @@ public:
     OrderedSet(Compare comp = Compare())
         : root(nullptr), comp(comp), rng(0x123456789abcdefULL) {}
 
+    // 破棄: 保持している全要素を解放
     ~OrderedSet() {
         clear(root);
     }
 
+    // コピー禁止: ノードの所有権を共有しない
     OrderedSet(const OrderedSet&) = delete;
+    // コピー代入禁止: ノードの所有権を共有しない
     OrderedSet& operator=(const OrderedSet&) = delete;
 
     // 挿入: insert(値) -> 新しく挿入した場合 true
