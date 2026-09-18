@@ -31,7 +31,7 @@ struct SCC {
         built = false;
     }
 
-    // 強連結成分分解を実行
+    // 構築: build() -> 強連結成分を分解し、IDをトポロジカル順に割り当てる
     void build() {
         vector<bool> used(n, false);
         vector<int> next_index(n, 0);
