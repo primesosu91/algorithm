@@ -110,8 +110,7 @@ struct ModInt {
     // 入力: 整数を読み込み [0, MOD) に正規化
     friend istream& operator>>(istream& is, ModInt& x) {
         long long value;
-        is >> value;
-        x = ModInt(value);
+        if (is >> value) x = ModInt(value);
         return is;
     }
 
