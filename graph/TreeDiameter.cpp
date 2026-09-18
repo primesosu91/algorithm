@@ -51,7 +51,8 @@ struct TreeDiameter {
         built = false;
     }
 
-    // 構築: build() -> 木の直径と復元情報を計算
+    // 構築: build() -> 連結な木の直径と復元情報を計算
+    // 前提: パスの重みの和が long long の範囲に収まる
     void build() {
         if (n == 1) {
             diameter_dist = 0;
