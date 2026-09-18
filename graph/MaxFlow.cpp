@@ -9,7 +9,6 @@ struct MaxFlow {
         long long flow;
     };
 
-private:
     struct Edge {
         int to;
         long long capacity;
@@ -22,6 +21,7 @@ private:
     vector<int> level;
     vector<int> current_edge;
 
+private:
     // レベルグラフ構築: bfs(始点, 終点) -> 終点に到達可能なら true
     bool bfs(int source, int sink) {
         fill(level.begin(), level.end(), -1);
@@ -105,6 +105,7 @@ public:
     }
 
     // 最大流: flow(始点, 終点) -> 今回追加で流せた流量
+    // 前提: 流量の合計が long long の範囲に収まる
     long long flow(int source, int sink) {
         assert(0 <= source && source < n);
         assert(0 <= sink && sink < n);
@@ -160,7 +161,8 @@ public:
         return result;
     }
 
-    // 最小カット: min_cut(始点) -> 現在の残余グラフで始点から到達可能なら true
+    // 最小カット: min_cut(始点) -> 残余グラフで始点から到達可能なら true
+    // 同じ始点から最大流を求めた後に呼ぶと最小カットのS側になる
     vector<bool> min_cut(int source) const {
         assert(0 <= source && source < n);
 
@@ -201,6 +203,8 @@ public:
         return result;
     }
 };
+
+// example
 
 void yosupo_judge_Matching_on_Bipartite_Graph() {
     int L, R, M;
