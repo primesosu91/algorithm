@@ -17,17 +17,16 @@ struct CycleDetection {
         : n(n),
           directed(directed),
           edge_count(0),
+          graph(n),
           searched(false),
           cycle_exists(false) {
         assert(n >= 0);
-        graph.resize(n);
     }
 
     // 辺追加: add_edge(頂点u, 頂点v) -> 追加した辺ID
     int add_edge(int u, int v) {
         assert(0 <= u && u < n);
         assert(0 <= v && v < n);
-        assert(edge_count < numeric_limits<int>::max());
 
         int edge_id = edge_count++;
 
@@ -50,13 +49,13 @@ struct CycleDetection {
         return cycle_exists;
     }
 
-    // サイクルの頂点列: get_cycle_vertices() -> 辺数と同じ長さの頂点列
+    // 頂点列: get_cycle_vertices() -> 始点の重複なし、サイクルがなければ空
     vector<int> get_cycle_vertices() {
         search();
         return cycle_vertices;
     }
 
-    // サイクルの辺ID列: get_cycle_edges() -> 頂点列に対応する辺ID列
+    // 辺列: get_cycle_edges() -> 頂点列と同じ長さ、最後の辺は始点へ戻る
     vector<int> get_cycle_edges() {
         search();
         return cycle_edges;
