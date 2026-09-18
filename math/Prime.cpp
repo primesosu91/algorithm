@@ -169,14 +169,14 @@ vector<long long> divisors(long long n) {
 }
 
 namespace prime_internal {
-    const int SIEVE_MAX = 5000000;
-    const int PHI_N = 10000;
-    const int PHI_M = 100;
+    const int sieve_max = 5000000;
+    const int phi_n = 10000;
+    const int phi_m = 100;
 
     vector<int> sieve_primes;
     vector<int> pi_table;
 
-    long long phi_table[PHI_N][PHI_M];
+    long long phi_table[phi_n][phi_m];
 
     bool sieve_initialized = false;
 
@@ -187,17 +187,17 @@ namespace prime_internal {
         if (sieve_initialized) return;
         sieve_initialized = true;
 
-        vector<bool> is_composite(SIEVE_MAX + 1, false);
-        pi_table.assign(SIEVE_MAX + 1, 0);
+        vector<bool> is_composite(sieve_max + 1, false);
+        pi_table.assign(sieve_max + 1, 0);
 
-        for (int i = 2; i <= SIEVE_MAX; i++) {
+        for (int i = 2; i <= sieve_max; i++) {
             if (!is_composite[i]) {
                 sieve_primes.push_back(i);
 
-                if ((long long)i * i <= SIEVE_MAX) {
+                if ((long long)i * i <= sieve_max) {
                     for (
                         long long j = (long long)i * i;
-                        j <= SIEVE_MAX;
+                        j <= sieve_max;
                         j += i
                     ) {
                         is_composite[(int)j] = true;
@@ -209,14 +209,14 @@ namespace prime_internal {
                 pi_table[i - 1] + (!is_composite[i]);
         }
 
-        for (int x = 0; x < PHI_N; x++) {
+        for (int x = 0; x < phi_n; x++) {
             phi_table[x][0] = x;
         }
 
-        for (int s = 1; s < PHI_M; s++) {
+        for (int s = 1; s < phi_m; s++) {
             int p = sieve_primes[s - 1];
 
-            for (int x = 0; x < PHI_N; x++) {
+            for (int x = 0; x < phi_n; x++) {
                 phi_table[x][s] =
                     phi_table[x][s - 1]
                     - phi_table[x / p][s - 1];
@@ -228,7 +228,7 @@ namespace prime_internal {
     long long phi(long long x, int s) {
         if (s == 0) return x;
 
-        if (s < PHI_M && x < PHI_N) {
+        if (s < phi_m && x < phi_n) {
             return phi_table[x][s];
         }
 
@@ -282,7 +282,7 @@ namespace prime_internal {
 
     // Lehmer素数計数
     long long lehmer_pi(long long x) {
-        if (x < SIEVE_MAX) {
+        if (x < sieve_max) {
             return pi_table[(int)x];
         }
 
@@ -291,32 +291,31 @@ namespace prime_internal {
             return it->second;
         }
 
-        long long a = lehmer_pi(iroot4(x));
-        long long b = lehmer_pi(isqrt(x));
-        long long c = lehmer_pi(icbrt(x));
+        int a = (int)lehmer_pi(iroot4(x));
+        int b = (int)lehmer_pi(isqrt(x));
+        int c = (int)lehmer_pi(icbrt(x));
 
         long long sum =
-            phi(x, (int)a)
-            + (b + a - 2) * (b - a + 1) / 2;
+            phi(x, a)
+            + (long long)(b + a - 2) * (b - a + 1) / 2;
 
-        for (long long i = a; i < b; i++) {
+        for (int i = a; i < b; i++) {
             long long w =
-                x / sieve_primes[(int)i];
+                x / sieve_primes[i];
 
             sum -= lehmer_pi(w);
 
             if (i < c) {
-                long long lim =
-                    lehmer_pi(isqrt(w));
+                int lim = (int)lehmer_pi(isqrt(w));
 
                 for (
-                    long long j = i;
+                    int j = i;
                     j < lim;
                     j++
                 ) {
                     sum -=
                         lehmer_pi(
-                            w / sieve_primes[(int)j]
+                            w / sieve_primes[j]
                         ) - j;
                 }
             }
