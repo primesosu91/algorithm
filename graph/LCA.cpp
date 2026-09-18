@@ -29,7 +29,7 @@ struct LCA {
         graph[v].push_back(u);
     }
 
-    // 構築: build(根)
+    // 構築: build(根) -> 木の祖先表を計算、辺の追加後は再構築する
     void build(int root) {
         assert(0 <= root && root < n);
 
