@@ -39,7 +39,6 @@ struct BellmanFord {
     int add_edge(int from, int to, T cost) {
         assert(0 <= from && from < n);
         assert(0 <= to && to < n);
-        assert(edge_count < numeric_limits<int>::max());
 
         int id = edge_count++;
 
@@ -54,8 +53,7 @@ struct BellmanFord {
         return id;
     }
 
-    // 最短距離計算: build(始点)
-    // 前提: 緩和で計算される距離が T の表現範囲内
+    // 最短距離計算: build(始点) -> 有限な最短距離は T の範囲に収まること
     void build(int start) {
         assert(0 <= start && start < n);
 
@@ -70,6 +68,10 @@ struct BellmanFord {
         distance[start] = T{};
         reached[start] = true;
 
+        // 整数型の中間距離は広い型で計算する
+        using Distance = conditional_t<is_integral_v<T> && (sizeof(T) <= 8), __int128, T>;
+        vector<Distance> work_distance(n, Distance{});
+
         // 通常の Bellman-Ford
         for (int i = 0; i < n - 1; ++i) {
             bool updated = false;
@@ -77,15 +79,10 @@ struct BellmanFord {
             for (const auto& e : edges) {
                 if (!reached[e.from]) continue;
 
-                T nd;
+                Distance nd = work_distance[e.from] + (Distance)e.cost;
 
-                if (!add_without_overflow(distance[e.from], e.cost, nd)) {
-                    assert(false && "distance is outside the range of T");
-                    continue;
-                }
-
-                if (!reached[e.to] || nd < distance[e.to]) {
-                    distance[e.to] = nd;
+                if (!reached[e.to] || nd < work_distance[e.to]) {
+                    work_distance[e.to] = nd;
                     reached[e.to] = true;
 
                     prev[e.to] = e.from;
@@ -102,14 +99,9 @@ struct BellmanFord {
         for (const auto& e : edges) {
             if (!reached[e.from]) continue;
 
-            T nd;
+            Distance nd = work_distance[e.from] + (Distance)e.cost;
 
-            if (!add_without_overflow(distance[e.from], e.cost, nd)) {
-                assert(false && "distance is outside the range of T");
-                continue;
-            }
-
-            if (!reached[e.to] || nd < distance[e.to]) {
+            if (!reached[e.to] || nd < work_distance[e.to]) {
                 negative[e.to] = true;
             }
         }
@@ -135,10 +127,18 @@ struct BellmanFord {
             }
         }
 
+        // 距離が確定する頂点の値だけを保存する
+        for (int v = 0; v < n; ++v) {
+            if (!reached[v] || negative[v]) continue;
+            assert(work_distance[v] >= (Distance)numeric_limits<T>::lowest());
+            assert(work_distance[v] <= (Distance)numeric_limits<T>::max());
+            distance[v] = (T)work_distance[v];
+        }
+
         built = true;
     }
 
-    // 距離取得: dist(頂点) -> 到達不能の場合は T{}、判定には reachable() を使用
+    // 距離取得: dist(頂点) -> reachable(v) && !is_negative(v) の場合のみ有効
     T dist(int v) const {
         assert(built);
         assert(0 <= v && v < n);
@@ -169,7 +169,7 @@ struct BellmanFord {
         return negative_cycle;
     }
 
-    // 経路復元: get_path(終点) -> 始点から終点までの頂点列
+    // 経路復元: get_path(終点) -> 始点から終点までの頂点列、到達不能・負閉路の影響ありなら空
     vector<int> get_path(int v) const {
         assert(built);
         assert(0 <= v && v < n);
@@ -188,7 +188,7 @@ struct BellmanFord {
         return path;
     }
 
-    // 経路復元: get_path_edges(終点) -> 始点から終点までの辺ID列
+    // 経路復元: get_path_edges(終点) -> 始点から終点までの辺ID列、到達不能・負閉路の影響ありなら空
     vector<int> get_path_edges(int v) const {
         assert(built);
         assert(0 <= v && v < n);
@@ -205,20 +205,5 @@ struct BellmanFord {
         reverse(path_edges.begin(), path_edges.end());
 
         return path_edges;
-    }
-
-private:
-    static bool add_without_overflow(T a, T b, T& result) {
-        if constexpr (is_integral_v<T>) {
-            if constexpr (is_signed_v<T>) {
-                if (b > 0 && a > numeric_limits<T>::max() - b) return false;
-                if (b < 0 && a < numeric_limits<T>::lowest() - b) return false;
-            } else {
-                if (a > numeric_limits<T>::max() - b) return false;
-            }
-        }
-
-        result = a + b;
-        return true;
     }
 };
