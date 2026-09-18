@@ -2,10 +2,7 @@
 using namespace std;
 
 // ランレングス圧縮: run_length_encoding(文字列) -> {文字, 連続数} の列
-// 前提: 文字数が int の表現範囲内
 vector<pair<char, int>> run_length_encoding(const string& s) {
-    assert(s.size() <= (size_t)numeric_limits<int>::max());
-
     vector<pair<char, int>> result;
 
     for (char c : s) {
@@ -20,11 +17,8 @@ vector<pair<char, int>> run_length_encoding(const string& s) {
 }
 
 // ランレングス圧縮: run_length_encoding(配列) -> {値, 連続数} の列
-// 前提: 要素数が int の表現範囲内
 template<class T>
 vector<pair<T, int>> run_length_encoding(const vector<T>& values) {
-    assert(values.size() <= (size_t)numeric_limits<int>::max());
-
     vector<pair<T, int>> result;
 
     for (const T& value : values) {
