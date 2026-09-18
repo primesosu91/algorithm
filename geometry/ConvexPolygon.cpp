@@ -7,23 +7,16 @@ struct Point {
 };
 
 // 外積: cross(点a, 点b, 点c) -> (b - a) × (c - a)
-// 前提: 計算結果が __int128 の表現範囲内
+// 前提: 積と差が __int128 の範囲に収まる
 __int128 cross(const Point& a, const Point& b, const Point& c) {
-    __int128 ab_x = (__int128)b.x - a.x;
-    __int128 ab_y = (__int128)b.y - a.y;
-    __int128 ac_x = (__int128)c.x - a.x;
-    __int128 ac_y = (__int128)c.y - a.y;
-
-    return ab_x * ac_y - ab_y * ac_x;
+    return ((__int128)b.x - a.x) * ((__int128)c.y - a.y)
+         - ((__int128)b.y - a.y) * ((__int128)c.x - a.x);
 }
 
-// 凸判定: is_convex(多角形) -> 単純多角形が凸なら true
-// 境界上の連続する3点が一直線の場合も凸として扱う
+// 凸判定: is_convex(多角形) -> 単純多角形が凸なら true（全点が一直線なら false）
 bool is_convex(const vector<Point>& polygon) {
-    assert(polygon.size() >= 3);
-    assert(polygon.size() <= (size_t)numeric_limits<int>::max());
-
     int n = (int)polygon.size();
+    assert(n >= 3);
 
     bool positive = false;
     bool negative = false;
