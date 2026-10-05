@@ -273,23 +273,3 @@ public:
         return result;
     }
 };
-
-// examples
-
-void tenkei_algo_F() {
-    int V, E, F;
-    cin >> V >> E >> F;
-    MinCostFlow f(V);
-    for (int i = 0; i < E; i ++) {
-        int u, v;
-        long long c, d;
-        cin >> u >> v >> c >> d;
-        u --, v --;
-        f.add_edge(u, v, c, d);
-    }
-    cout << f.flow(0, V - 1, F).cost << endl;
-}
-
-int main() {
-    tenkei_algo_F();
-}

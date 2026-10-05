@@ -158,30 +158,3 @@ private:
         return {farthest, dist[farthest]};
     }
 };
-
-// examples
-
-void yosupo_judge_Tree_Diameter() {
-    int N;
-    cin >> N;
-    TreeDiameter g(N);
-    for (int i = 0; i < N - 1; i ++) {
-        int a, b;
-        long long c;
-        cin >> a >> b >> c;
-        g.add_edge(a, b, c);
-    }
-    g.build();
-    long long x = g.diameter_length();
-    auto list = g.diameter_vertices();
-    cout << x << " " << list.size() << endl;
-    for (int i = 0; i < (int) list.size(); i ++) {
-        cout << list[i];
-        if (i < list.size() - 1) cout << " ";
-        else cout << endl;
-    }
-}
-
-int main() {
-    yosupo_judge_Tree_Diameter();
-}

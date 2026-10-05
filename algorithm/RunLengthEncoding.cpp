@@ -31,27 +31,3 @@ vector<pair<T, int>> run_length_encoding(const vector<T>& values) {
 
     return result;
 }
-
-// examples
-
-void ABC_259_C() {
-    string S, T;
-    cin >> S >> T;
-    auto list_s = run_length_encoding(S);
-    auto list_t = run_length_encoding(T);
-    bool ok = true;
-    if (list_s.size() != list_t.size()) ok = false;
-    else {
-        for (int i = 0; i < list_s.size(); i ++) {
-            if (list_s[i].first != list_t[i].first) ok = false;
-            if (list_s[i].second == 1 && list_t[i].second != 1) ok = false;
-            if (list_s[i].second >= 2 && list_t[i].second < list_s[i].second) ok = false;
-        }
-    }
-    if (ok) cout << "Yes" << endl;
-    else cout << "No" << endl;
-}
-
-int main() {
-    ABC_259_C();
-}

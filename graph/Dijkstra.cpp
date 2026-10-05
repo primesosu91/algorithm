@@ -162,32 +162,3 @@ struct Dijkstra {
         return edges;
     }
 };
-
-// examples
-
-void yosupo_judge_Shortest_Path() {
-    int N, M, s, t;
-    cin >> N >> M >> s >> t;
-    Dijkstra<long long> g(N, true);
-    for (int i = 0; i < M; i ++) {
-        int a, b;
-        long long c;
-        cin >> a >> b >> c;
-        g.add_edge(a, b, c);
-    }
-    g.build(s);
-    bool ok = g.reachable(t);
-    if (!ok) {
-        cout << -1 << endl;
-        return;
-    }
-    vector<int> list = g.get_path(t);
-    cout << g.dist(t) << " " << list.size() - 1 << endl;
-    for (int i = 0; i < (int) list.size() - 1; i ++) {
-        cout << list[i] << " " << list[i + 1] << endl;
-    }
-}
-
-int main() {
-    yosupo_judge_Shortest_Path();
-}

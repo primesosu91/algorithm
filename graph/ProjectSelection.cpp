@@ -272,30 +272,3 @@ struct ProjectSelection {
         return selected_result;
     }
 };
-
-/ examples
-
-void ARC_085_E() {
-    int N;
-    cin >> N;
-    vector<int> A(N);
-    long long sum = 0;
-    for (int i = 0; i < N; i ++) {
-        cin >> A[i];
-        sum += A[i];
-    }
-    ProjectSelection f(N);
-    for (int i = 0; i < N; i ++) {
-        f.add_profit(i, -A[i]);
-    }
-    for (int i = 0; i < N; i ++) {
-        for (int j = i; j < N; j ++) {
-            if ((j + 1) % (i + 1) == 0) f.add_dependency(i, j);
-        }
-    }
-    cout << sum + f.solve() << endl;
-}
-
-int main() {
-    ARC_085_E();
-}

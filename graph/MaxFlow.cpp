@@ -203,33 +203,3 @@ public:
         return result;
     }
 };
-
-// example
-
-void yosupo_judge_Matching_on_Bipartite_Graph() {
-    int L, R, M;
-    cin >> L >> R >> M;
-    MaxFlow f(L + R + 2);
-    int s = L + R, t = s + 1;
-    for (int i = 0; i < M; i ++) {
-        int a, b;
-        cin >> a >> b;
-        f.add_edge(a, L + b, 1);
-    }
-    for (int i = 0; i < L; i ++) {
-        f.add_edge(s, i, 1);
-    }
-    for (int i = 0; i < R; i ++) {
-        f.add_edge(L + i, t, 1);
-    }
-    cout << f.flow(s, t) << endl;
-    for (int i = 0; i < M; i ++) {
-        if (f.get_edge(i).flow) {
-            cout << f.get_edge(i).from << " " << f.get_edge(i).to - L << endl;
-        }
-    }
-}
-
-int main() {
-    yosupo_judge_Matching_on_Bipartite_Graph();
-}

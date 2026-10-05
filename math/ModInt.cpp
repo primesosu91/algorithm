@@ -119,27 +119,3 @@ struct ModInt {
         return os << x.value;
     }
 };
-
-// examples
-
-void ABC_242_C() {
-    int N;
-    cin >> N;
-    using mint = ModInt<998244353>;
-    vector<vector<mint>> dp(N, vector<mint>(9, 0));
-    for (int i = 0; i < 9; i ++) dp[0][i] = 1;
-    for (int i = 1; i < N; i ++) {
-        for (int j = 0; j < 9; j ++) {
-            dp[i][j] += dp[i-1][j];
-            if (j - 1 >= 0) dp[i][j] += dp[i-1][j-1];
-            if (j + 1 < 9) dp[i][j] += dp[i-1][j+1];
-        }
-    }
-    mint ans = 0;
-    for (int i = 0; i < 9; i ++) ans += dp[N-1][i];
-    cout << ans << endl;
-}
-
-int main() {
-    ABC_242_C();
-}

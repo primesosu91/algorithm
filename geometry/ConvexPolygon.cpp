@@ -36,21 +36,3 @@ bool is_convex(const vector<Point>& polygon) {
 
     return positive || negative;
 }
-
-// examples
-
-void ABC_226_C() {
-    vector<Point> p(4);
-    for (int i = 0; i < 4; i ++) {
-        int x, y;
-        cin >> x >> y;
-        p[i] = {x, y};
-    }
-    bool ok = is_convex(p);
-    if (ok) cout << "Yes" << endl;
-    else cout << "No" << endl;
-}
-
-int main() {
-    ABC_226_C();
-}

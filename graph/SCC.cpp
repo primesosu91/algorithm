@@ -120,30 +120,3 @@ struct SCC {
         return component_groups;
     }
 };
-
-// examples
-
-void yosupo_judge_Strongly_Connected_Components() {
-    int N, M;
-    cin >> N >> M;
-    SCC g(N);
-    for (int i = 0; i < M; i ++) {
-        int a, b;
-        cin >> a >> b;
-        g.add_edge(a, b);
-    }
-    g.build();
-    cout << g.count() << endl;
-    vector<vector<int>> list = g.groups();
-    for (int i = 0; i < (int) list.size(); i ++) {
-        cout << list[i].size();
-        for (int v : list[i]) {
-            cout << " " << v;
-        }
-        cout << endl;
-    }
-}
-
-int main() {
-    yosupo_judge_Strongly_Connected_Components();
-}
