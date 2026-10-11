@@ -52,7 +52,7 @@ MinCostFlowで、この入力が期待した結果になりません。
 
 1. mainの最新の完全なコミットSHAを取得する。
 2. そのSHAに固定してAGENTS、開発規約、運用ガイド、本書、RepositoryLayout、SnippetRulesを読む。不具合修正はDebugRulesも読む。
-3. [NamingAndAPI.md](NamingAndAPI.md) の共通方針と対象項目、[UnionFind.cpp](../data_structure/UnionFind.cpp)、対象・関連実装、保存済みテスト、関連する [DevelopmentLog.md](../records/DevelopmentLog.md) の項目を読む。
+3. [NamingAndAPI.md](NamingAndAPI.md) の共通方針と対象項目、[UnionFind.cpp](../library/data_structure/UnionFind.cpp)、対象・関連実装、保存済みテスト、関連する [DevelopmentLog.md](../records/DevelopmentLog.md) の項目を読む。
 4. 確認コミット、参照したファイル、今回の範囲を報告する。カタログとの不一致は最新実装を正として確認する。
 5. 型名・完全な関数シグネチャ、意味、引数・返り値、状態変更、前提・呼出し順、添字・区間・未該当値・計算量と、AIが選んだソース・テストの予定パスと分類理由を示す。修正では変更前後のAPIへの影響も示す。
 6. 通常は設計承認を待って実装する。破壊的変更は理由・対象・移行方法も承認する。具体的な一括許可が既にあれば同じ確認を繰り返さない。
@@ -61,9 +61,9 @@ MinCostFlowで、この入力が期待した結果になりません。
 
 ## 5. 承認後の実装と検証
 
-1. RepositoryLayoutに従ってAIが該当カテゴリを選び、必要なフォルダを作成し、原則1ライブラリ1 `.cpp` として実装する。木を前提とするグラフアルゴリズムは `tree/`、一般のグラフは `graph/`、汎用データ構造は `data_structure/`。外部マクロ・型エイリアス・自作テンプレート・ACLに原則依存しない。
+1. RepositoryLayoutに従ってAIが該当カテゴリを選び、必要なフォルダを作成し、`library/カテゴリ/LibraryName.cpp` に原則1ライブラリ1 `.cpp` として実装する。木を前提とするグラフアルゴリズムは `library/tree/`、一般のグラフは `library/graph/`、汎用データ構造は `library/data_structure/`。外部マクロ・型エイリアス・自作テンプレート・ACLに原則依存しない。
 2. 不具合修正では原因と反例を確認し、元の名前・構造・コメントを維持して必要最小限を修正する。
-3. C++23で対象固有の基本・境界・適切なランダム・愚直比較を行い、本体と同じ相対構成の `tests/カテゴリ/LibraryName.test.cpp` へ保存する。対象includeも本体のパスへ合わせる。入力範囲・seed・未確認事項を残し、計算量・数値範囲も確認する。
+3. C++23で対象固有の基本・境界・適切なランダム・愚直比較を行い、`library/` 以下と同じ相対構成の `tests/カテゴリ/LibraryName.test.cpp` へ保存する。対象includeも `library/カテゴリ/LibraryName.cpp` へ合わせる。入力範囲・seed・未確認事項を残し、計算量・数値範囲も確認する。
 4. 公開宣言と本体を読んでカタログを更新し、Git blob SHAをcatalog-sourceへ記録する。SHAだけ更新して調査済みにしない。
 5. [generate_snippets.py](../tools/generate_snippets.py) でテンプレートと全ライブラリからスニペットを再生成する。
 6. 共通チェックと必要な追加検証を通過させる。
@@ -127,5 +127,7 @@ Workで依頼を受けている間にAIが作業する方式。Actionsは保存�
 ローカルの完成作業とGitHub未反映を区別する。取得不能・権限・保護規則・同時更新に応じて対応し、未完了を成功と報告しない。過去資料・未コミットファイル・スニペットを記憶から復元しない。
 
 新しいWorkチャットでも、最新mainの資料を確認して今回の依頼から開始できる。途中作業を引き継ぐ場合は [運用ガイド](CompetitiveProgrammingGuide.md) 第6節に従い、確認コミット・対象・合意済み仕様・確認できた承認範囲・作業版の保存先・未完了事項を示す。
+
+完了済みの開発チャットは削除してよい。削除前にGitHubへの反映を確認し、チャットだけに残る未完了の仕様・承認・差分があれば先にGitHubへ保存する。次回は新しいWorkで要望を伝え、最新mainから設計と作業を開始する。
 
 改訂日: 2026-10-12（日本時間）。

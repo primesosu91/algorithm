@@ -1,4 +1,4 @@
-#include "graph/MaxFlow.cpp"
+#include "library/graph/MaxFlow.cpp"
 
 int main() {
     mt19937 rng(20261012);

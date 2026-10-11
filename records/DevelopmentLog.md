@@ -89,8 +89,8 @@
 
 | 移動前 | 移動後 | Git blob SHA |
 | --- | --- | --- |
-| `graph/LCA.cpp` | [tree/LCA.cpp](../tree/LCA.cpp) | `9cc01adcd28abd1c975ca854751cb0bce9b80cc1` |
-| `graph/TreeDiameter.cpp` | [tree/TreeDiameter.cpp](../tree/TreeDiameter.cpp) | `af703fa4be1ee9dc465e4b63bf9e15f076a578a5` |
+| `graph/LCA.cpp` | [tree/LCA.cpp](../library/tree/LCA.cpp) | `9cc01adcd28abd1c975ca854751cb0bce9b80cc1` |
+| `graph/TreeDiameter.cpp` | [tree/TreeDiameter.cpp](../library/tree/TreeDiameter.cpp) | `af703fa4be1ee9dc465e4b63bf9e15f076a578a5` |
 
 両本体を含む全18ソースの内容・公開API・blob SHAは基準mainと同じ。テスト2本はincludeのパスだけ変更した。古いパスを使う利用側のincludeやブックマークは新パスへ変更する。ソースの重複コピーは作らず、Gitの履歴を維持する。
 
@@ -107,3 +107,56 @@
 - Projectの設定欄はGitHub更新だけでは変わらないため、ユーザーが更新した [ProjectInstructions.md](../Rule/ProjectInstructions.md) の全文へ貼り替える。
 - GitHubの生成スニペット更新と手元のVS Codeへの取り込みは別の操作。掲載順以外の内容は同じであり、既存のprefixはそのまま使える。
 - 保存済みテストの範囲を越えた全入力・最大規模・全テンプレート型の正当性や性能を新たに認定する変更ではない。
+
+## 2026-10-12（日本時間） — ライブラリ本体をlibrary/へ集約
+
+基準main: [ca75829056fbc9c6c6d927645dec8a1448fa7412](https://github.com/primesosu91/algorithm/commit/ca75829056fbc9c6c6d927645dec8a1448fa7412)。
+
+### 許可された作業と変更
+
+- ユーザーは規約とライブラリ本体を区別するため、ライブラリ専用フォルダの作成と既存本体の移動を依頼し、旧開発チャットを削除してよいか確認した。
+- 基準mainの全59ファイルをGit blob SHAで照合し、同一内容の作業版から変更した。AGENTS、開発・運用・配置・命名/API・スニペット規約、UnionFind、対象ソースとテストのinclude、生成・検証処理、既存作業記録を確認した。
+- 18本体を `library/` 以下の6カテゴリへ移動し、graph/treeの分離を維持した。ソース内容・公開APIは変更していない。旧カテゴリへの互換コピーは作らず、Gitの履歴を維持する。
+- `library/README.md` をカテゴリ別目次として追加し、ルートREADMEをリポジトリ全体と管理資料への入口にした。AGENTS・規約・手順・Project指示・カタログ・現行リンクを新パスに合わせた。過去の作業記録のパス表記は当時の履歴として残し、リンク先は現在の本体に合わせた。
+- 対応テストは `tests/カテゴリ/LibraryName.test.cpp` のままで、本体の `library/` 以下と相対構成を揃えた。全18テストは対象includeにlibrary/を付ける変更だけで、独立した比較方法・入力範囲・seedは維持した。
+- スニペット生成・カタログ・構文チェックはlibrary/以下の全カテゴリからソースを検出する。共通配置チェックはlibrary/外やカテゴリ外の本体、対応テストの不足・取り残し、古いincludeを検出する。library/READMEの存在と相対リンクも確認する。
+- 完了済み開発チャットの保持を必須としないことを運用ガイド・手順・AGENTS・Project指示へ追記した。削除前にGitHubへの反映を確認し、チャットだけに残る未完了の要望・設計・承認・差分はGitHubの記録や作業ブランチへ保存する。過去会話の全文移行・完全復元を保証する変更ではなく、チャットの削除操作はユーザーが行う。
+
+### 対象ソース版
+
+全18本体のGit blob SHAは基準mainと同じ。移動前のパスは下表から先頭の `library/` を除いたもの。
+
+| 移動後のソース | Git blob SHA（移動前と同じ） |
+| --- | --- |
+| [library/algorithm/RunLengthEncoding.cpp](../library/algorithm/RunLengthEncoding.cpp) | `2490c1cdd542e3b0eee31fc02180f7e0e72cfae2` |
+| [library/data_structure/LazySegmentTree.cpp](../library/data_structure/LazySegmentTree.cpp) | `73ca088f5d8446329dd2a85ab82a41c15e94fa3b` |
+| [library/data_structure/OrderedSet.cpp](../library/data_structure/OrderedSet.cpp) | `d5e69129b4e8361fc496f7c469fa2bf6fda4bf6b` |
+| [library/data_structure/SegmentTree.cpp](../library/data_structure/SegmentTree.cpp) | `03ff41bbb1f74eb970106545266be594a043dc13` |
+| [library/data_structure/UnionFind.cpp](../library/data_structure/UnionFind.cpp) | `52213a1f40c4239411e43aacb768b17e299ee9f0` |
+| [library/geometry/ConvexPolygon.cpp](../library/geometry/ConvexPolygon.cpp) | `befd23138399b2f46a87732bf52ecea24e6537e3` |
+| [library/graph/BellmanFord.cpp](../library/graph/BellmanFord.cpp) | `604849c233489ba68cfd05b4161d08b9fc911b58` |
+| [library/graph/CycleDetection.cpp](../library/graph/CycleDetection.cpp) | `c5f5544dc440c301083a3e1a402b0fe69289e48b` |
+| [library/graph/Dijkstra.cpp](../library/graph/Dijkstra.cpp) | `8f95b4587063347fdf154fcb05f19f19aa8550e5` |
+| [library/graph/MaxFlow.cpp](../library/graph/MaxFlow.cpp) | `0efd635e006549d72006e2f61078699e160dc8e5` |
+| [library/graph/MinCostFlow.cpp](../library/graph/MinCostFlow.cpp) | `eb45f905e889965b10c6730c150ecd3635816d7a` |
+| [library/graph/ProjectSelection.cpp](../library/graph/ProjectSelection.cpp) | `087135952c0e40cdcfcd243c196256488ebf282d` |
+| [library/graph/SCC.cpp](../library/graph/SCC.cpp) | `a9cf9244049a055edcbaa287c7d3c8d0573cabb2` |
+| [library/graph/WarshallFloyd.cpp](../library/graph/WarshallFloyd.cpp) | `d788589f3cc2b3b8b48038e57396bc3348611a0a` |
+| [library/math/ModInt.cpp](../library/math/ModInt.cpp) | `1e654cdc63d8eccffdf1066bebc13d5c43091db9` |
+| [library/math/Prime.cpp](../library/math/Prime.cpp) | `b9dc888e30d593709accc240a459777a363c40f9` |
+| [library/tree/LCA.cpp](../library/tree/LCA.cpp) | `9cc01adcd28abd1c975ca854751cb0bce9b80cc1` |
+| [library/tree/TreeDiameter.cpp](../library/tree/TreeDiameter.cpp) | `af703fa4be1ee9dc465e4b63bf9e15f076a578a5` |
+
+### ローカルの検証結果と範囲
+
+- `python3 tools/generate_snippets.py` と `python3 tools/check_repository.py` が成功。g++ 13.3.0・C++23で全18本体、指定テンプレート単体、各ライブラリとの組合せ、全18を同時に挿入したコードの構文確認と、保存済み全18回帰テストの通常実行を通過した。
+- 配置の5テストとスニペットの4テスト、計9件が成功。library/内のtree・新カテゴリの自動検出、移動時のテスト不足・旧テスト・古いinclude、ルート・管理フォルダ・旧カテゴリ・library直下への本体配置を確認した。全19項目の原本との全文一致・キー・prefix・solveのカーソル位置・エスケープを確認した。
+- 全18ソースのblob SHA、カタログの収録と版、目次の全18リンク、本体とテストの対応、管理資料の相対リンク、差分の空白を確認した。削除は移動元18ソースのみ、追加は移動先18ソースとlibrary/READMEのみである。
+- 再生成した19項目のスニペットとAtCoderテンプレートは基準mainとバイト単位で同一。手元のVS Codeの既存スニペットはそのまま使える。
+- 本体の動作は変更していないため、ローカルでのASan/UBSan再実行は省略。GitHub Actionsは反映後に通常検証とASan/UBSanを実行する。当該コミットの結果は実行履歴で確認し、ローカル検証とは区別して完了報告する。
+
+### 残る設定と未確認事項
+
+- Projectの指示はGitHubへの保存だけでは変わらないため、ユーザーが [ProjectInstructions.md](../Rule/ProjectInstructions.md) の全文へ貼り替える。本体をincludeしている利用側のコードやブックマークはlibrary/を付けた新パスへ更新する。
+- 既存18ライブラリと現行資料はGitHubから参照でき、次回の新しいWorkに旧チャットや常設添付は不要。チャットだけの未保存情報・途中の作業があるかは、削除前にその対象を確認する。すべての過去チャットの全文を保存したとは扱わない。
+- 保存済みテストの範囲を越えた全入力・最大規模・全テンプレート型の正当性や性能を新たに認定する変更ではない。オンライン提出・AC・再ACは実行していない。

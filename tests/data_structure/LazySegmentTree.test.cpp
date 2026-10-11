@@ -1,4 +1,4 @@
-#include "data_structure/LazySegmentTree.cpp"
+#include "library/data_structure/LazySegmentTree.cpp"
 
 struct Sum {
     long long value;

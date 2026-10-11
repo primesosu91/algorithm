@@ -1,4 +1,4 @@
-#include "data_structure/UnionFind.cpp"
+#include "library/data_structure/UnionFind.cpp"
 
 // UnionFindと異なる方法で、追加済みの辺から成分を再計算する。
 vector<vector<int>> reference_groups(const vector<vector<int>>& graph) {

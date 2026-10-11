@@ -1,4 +1,4 @@
-#include "graph/BellmanFord.cpp"
+#include "library/graph/BellmanFord.cpp"
 #include "tests/graph/path_reference.hpp"
 
 int main() {

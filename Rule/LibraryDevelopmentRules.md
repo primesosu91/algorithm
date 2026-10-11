@@ -152,8 +152,8 @@ bool same(int u, int v);
 ## 9. ファイル
 
 - 1ライブラリ = 1ファイルを原則とする。
-- [RepositoryLayout.md](RepositoryLayout.md) に従い、AIが用途・前提条件・既存構成からカテゴリを選び、必要なフォルダを作成して `カテゴリ/LibraryName.cpp` に配置する。ユーザーに保存先の指定・作成・移動を求めない。
-- 木を前提とするグラフアルゴリズムは `tree/`、一般のグラフは `graph/`。SegmentTree等の汎用データ構造は `data_structure/`。対応テストは本体と同じ相対構成の `tests/カテゴリ/LibraryName.test.cpp` とする。
+- [RepositoryLayout.md](RepositoryLayout.md) に従い、AIが用途・前提条件・既存構成からカテゴリを選び、必要なフォルダを作成して `library/カテゴリ/LibraryName.cpp` に配置する。ユーザーに保存先の指定・作成・移動を求めない。
+- 木を前提とするグラフアルゴリズムは `library/tree/`、一般のグラフは `library/graph/`。SegmentTree等の汎用データ構造は `library/data_structure/`。対応テストは `library/` 以下と同じ相対構成の `tests/カテゴリ/LibraryName.test.cpp` とする。
 - ライブラリは他の自作テンプレートに依存せず、可能な限り単独で利用できるようにする。
 - 各ライブラリの先頭は原則として以下とする。
 
@@ -245,7 +245,7 @@ ChatGPT LibraryやProjectへの常設ファイルは必要ない。作業時に�
 
 `UnionFind.cpp` は代表的な設計・記述スタイルの基準であり、設計前にGitHubの確認版を読む。
 
-READMEはカテゴリ別の目次として使い、規約・APIの本文を重複掲載しない。変更理由と検証結果は `records/DevelopmentLog.md` にまとめ、採用状態の別ファイルは作らない。
+`README.md` はリポジトリ全体の入口、`library/README.md` はライブラリのカテゴリ別目次として使い、規約・APIの本文を重複掲載しない。変更理由と検証結果は `records/DevelopmentLog.md` にまとめ、採用状態の別ファイルは作らない。
 
 ## 15. バージョン管理
 
@@ -255,7 +255,7 @@ READMEはカテゴリ別の目次として使い、規約・APIの本文を重�
 
 ## 16. 既存ライブラリとの統一
 
-新しいライブラリを作成・既存ライブラリを修正するとき、設計前にGitHubの `Rule/NamingAndAPI.md`、最新の `data_structure/UnionFind.cpp`、対象と関連する既存ソースコードを確認し、それらとの統一性を確認する。カタログだけで実装の確認を代替しない。
+新しいライブラリを作成・既存ライブラリを修正するとき、設計前にGitHubの `Rule/NamingAndAPI.md`、最新の `library/data_structure/UnionFind.cpp`、対象と関連する既存ソースコードを確認し、それらとの統一性を確認する。カタログだけで実装の確認を代替しない。
 
 特に以下を確認する。
 
@@ -309,4 +309,4 @@ READMEはカテゴリ別の目次として使い、規約・APIの本文を重�
 - 名前はファイル名から拡張子を除いたもの、prefixは `!` と名前の連結。各項目には `prefix` と `body` だけを置く。
 - スニペットはソースから生成し、ソース・カタログ・必要なテストと原則同じコミットへまとめる。詳細は [SnippetRules.md](SnippetRules.md)。
 
-改訂日: 2026-10-12（日本時間）。AIによるフォルダ作成・自動配置、graph/treeの分離、新しいWorkチャットを基本とする運用を追加。設計承認後の自動反映、スニペット同期、対象固有の検証と整合性確認・GitHub反映の完了条件を維持する。
+改訂日: 2026-10-12（日本時間）。ライブラリ本体をlibrary/配下へ集約。AIによる自動配置、graph/treeの分離、設計承認後の自動反映、スニペット同期、対象固有の検証と整合性確認・GitHub反映の完了条件を維持する。

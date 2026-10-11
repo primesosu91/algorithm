@@ -1,4 +1,4 @@
-#include "graph/CycleDetection.cpp"
+#include "library/graph/CycleDetection.cpp"
 
 int main() {
     mt19937 rng(20261012);

@@ -1,4 +1,4 @@
-#include "graph/WarshallFloyd.cpp"
+#include "library/graph/WarshallFloyd.cpp"
 #include "tests/graph/path_reference.hpp"
 
 int main() {

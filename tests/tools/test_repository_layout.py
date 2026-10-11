@@ -20,20 +20,20 @@ class RepositoryLayoutChecks(unittest.TestCase):
     def test_tree_and_new_category_are_discovered(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            for name in ('tree/Example.cpp', 'new_category/Another.cpp'):
+            for name in ('library/tree/Example.cpp', 'library/new_category/Another.cpp'):
                 save(root, name, '// library\n')
-                test = 'tests/' + name.removesuffix('.cpp') + '.test.cpp'
+                test = 'tests/' + name.removeprefix('library/').removesuffix('.cpp') + '.test.cpp'
                 save(root, test, f'#include "{name}"\nint main() {{}}\n')
             save(root, 'templates/AtCoder.cpp', 'int main() {}\n')
             sources = library_sources(root)
-            self.assertEqual(set(sources), {'tree/Example.cpp', 'new_category/Another.cpp'})
+            self.assertEqual(set(sources), {'library/tree/Example.cpp', 'library/new_category/Another.cpp'})
             self.assertEqual(check_layout(root, sources), [])
 
     def test_moving_only_the_library_is_rejected(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            save(root, 'tree/Example.cpp', '// moved library\n')
-            save(root, 'tests/graph/Example.test.cpp', '#include "graph/Example.cpp"\n')
+            save(root, 'library/tree/Example.cpp', '// moved library\n')
+            save(root, 'tests/graph/Example.test.cpp', '#include "library/graph/Example.cpp"\n')
             errors = check_layout(root, library_sources(root))
             self.assertTrue(any('Missing matching regression test' in error for error in errors))
             self.assertTrue(any('no matching library' in error for error in errors))
@@ -41,20 +41,26 @@ class RepositoryLayoutChecks(unittest.TestCase):
     def test_stale_include_after_moving_both_files_is_rejected(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            save(root, 'tree/Example.cpp', '// moved library\n')
-            save(root, 'tests/tree/Example.test.cpp', '#include "graph/Example.cpp"\n')
+            save(root, 'library/tree/Example.cpp', '// moved library\n')
+            save(root, 'tests/tree/Example.test.cpp', '#include "library/graph/Example.cpp"\n')
             errors = check_layout(root, library_sources(root))
-            self.assertTrue(any('Test must include tree/Example.cpp' in error for error in errors))
+            self.assertTrue(any('Test must include library/tree/Example.cpp' in error for error in errors))
 
     def test_root_and_management_sources_are_rejected(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            for name in ('Example.cpp', 'Rule/Another.cpp'):
+            for name in ('Example.cpp', 'Rule/Another.cpp', 'graph/Legacy.cpp', 'library/Flat.cpp'):
                 save(root, name, '// misplaced library\n')
-                test = 'tests/' + name.removesuffix('.cpp') + '.test.cpp'
-                save(root, test, f'#include "{name}"\n')
             errors = check_layout(root, library_sources(root))
-            self.assertEqual(sum('source category' in error for error in errors), 2)
+            self.assertEqual(sum('under library/<category>/' in error for error in errors), 4)
+
+    def test_old_include_without_library_prefix_is_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            save(root, 'library/graph/Example.cpp', '// moved library\n')
+            save(root, 'tests/graph/Example.test.cpp', '#include "graph/Example.cpp"\n')
+            errors = check_layout(root, library_sources(root))
+            self.assertTrue(any('Test must include library/graph/Example.cpp' in error for error in errors))
 
 
 if __name__ == '__main__':

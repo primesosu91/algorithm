@@ -12,25 +12,35 @@ from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
 
+SOURCE_DIR = Path('library')
+
+
 def library_sources(root):
     """Keep coverage and compilation on the same set of library files."""
-    excluded = {'tests', 'test', 'tools', 'build', '.git', 'templates', 'snippets'}
     return {
         p.relative_to(root).as_posix(): p
-        for p in root.rglob('*.cpp')
-        if not any(part in excluded for part in p.relative_to(root).parts[:-1])
+        for p in (root / SOURCE_DIR).rglob('*.cpp')
     }
 
 
 def check_layout(root, sources):
     """Check matching paths/includes without fixing the set of categories."""
     errors = []
+    if not (root / SOURCE_DIR).is_dir():
+        errors.append('Missing library/ source directory')
+    excluded = {'tests', 'test', 'tools', 'build', '.git', 'templates', 'snippets'}
+    for path in sorted(root.rglob('*.cpp')):
+        relative = path.relative_to(root)
+        if any(part in excluded for part in relative.parts[:-1]):
+            continue
+        if relative.parts[0] != SOURCE_DIR.name:
+            errors.append(f'Library must be under library/<category>/: {relative.as_posix()}')
     for name in sorted(sources):
         relative = Path(name)
-        if (len(relative.parts) < 2 or relative.parts[0] in {'Rule', 'records'}
-                or relative.parts[0].startswith('.')):
-            errors.append(f'Library must be in a source category: {name}')
-        test = root / 'tests' / relative.with_suffix('.test.cpp')
+        if len(relative.parts) < 3 or relative.parts[0] != SOURCE_DIR.name:
+            errors.append(f'Library must be under library/<category>/: {name}')
+            continue
+        test = root / 'tests' / relative.relative_to(SOURCE_DIR).with_suffix('.test.cpp')
         if not test.is_file():
             errors.append(f'Missing matching regression test: {test.relative_to(root)}')
             continue
@@ -40,7 +50,7 @@ def check_layout(root, sources):
             errors.append(f'Test must include {name}: {test.relative_to(root)}')
     for test in sorted((root / 'tests').rglob('*.test.cpp')):
         relative = test.relative_to(root / 'tests').as_posix()
-        name = relative[:-len('.test.cpp')] + '.cpp'
+        name = (SOURCE_DIR / (relative[:-len('.test.cpp')] + '.cpp')).as_posix()
         if name not in sources:
             errors.append(f'Regression test has no matching library: {test.relative_to(root)}')
     return errors
@@ -64,7 +74,7 @@ def check(root):
             errors.append(f'Duplicate catalog source: {name}')
         recorded[name] = sha
 
-    # Discover categories dynamically; test programs/build output stay excluded.
+    # Discover all categories under library/; keep management files separate.
     actual = library_sources(root)
     errors.extend(check_layout(root, actual))
     for name in sorted(actual.keys() - recorded.keys()):
@@ -78,7 +88,7 @@ def check(root):
             errors.append(f'Source changed; review catalog: {name} (current blob {sha})')
 
     markdown = [root / 'README.md', *sorted((root / 'Rule').rglob('*.md'))]
-    for directory in ('tests', 'tools', 'records'):
+    for directory in ('library', 'tests', 'tools', 'records'):
         markdown.extend(sorted((root / directory).rglob('*.md')))
     if (root / 'AGENTS.md').is_file():
         markdown.append(root / 'AGENTS.md')

@@ -1,4 +1,4 @@
-#include "math/Prime.cpp"
+#include "library/math/Prime.cpp"
 
 int main() {
     const int maximum = 6000000;

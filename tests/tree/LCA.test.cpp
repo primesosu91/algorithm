@@ -1,4 +1,4 @@
-#include "tree/LCA.cpp"
+#include "library/tree/LCA.cpp"
 
 int main() {
     mt19937 rng(20261012);

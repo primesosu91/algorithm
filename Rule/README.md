@@ -13,7 +13,7 @@
 | [SnippetRules.md](SnippetRules.md) | テンプレートと全文スニペットの生成仕様 |
 | [ProjectInstructions.md](ProjectInstructions.md) | Projectの指示へ一度貼り付ける全文 |
 
-AIの入口は [AGENTS.md](../AGENTS.md)。実装の代表例は [UnionFind.cpp](../data_structure/UnionFind.cpp)。変更理由・対象ソース版・検証結果・未確認事項は [DevelopmentLog.md](../records/DevelopmentLog.md) で管理する。オンラインACと採用状態の個別管理は必須工程に含めない。
+AIの入口は [AGENTS.md](../AGENTS.md)。実装の代表例は [UnionFind.cpp](../library/data_structure/UnionFind.cpp)。変更理由・対象ソース版・検証結果・未確認事項は [DevelopmentLog.md](../records/DevelopmentLog.md) で管理する。オンラインACと採用状態の個別管理は必須工程に含めない。
 
 新規作成・修正・規約改訂は原則新しいWorkチャットで依頼し、関連する既存チャットを継続する場合もWorkで実行する。新しいチャットでも最新mainから開始できるよう、依頼・配置・検証・反映の手順をGitHubで管理する。
 

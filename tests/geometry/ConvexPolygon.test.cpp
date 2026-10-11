@@ -1,4 +1,4 @@
-#include "geometry/ConvexPolygon.cpp"
+#include "library/geometry/ConvexPolygon.cpp"
 
 int main() {
     vector<pair<vector<Point>, bool>> examples = {

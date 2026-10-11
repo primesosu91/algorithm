@@ -19,6 +19,7 @@ from generate_snippets import TEMPLATE, build_snippets, check_snippets
 
 REQUIRED = (
     'AGENTS.md',
+    'library/README.md',
     'Rule/LibraryDevelopmentRules.md',
     'Rule/CompetitiveProgrammingGuide.md',
     'Rule/DebugRules.md',

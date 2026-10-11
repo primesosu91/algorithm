@@ -1,4 +1,4 @@
-#include "math/ModInt.cpp"
+#include "library/math/ModInt.cpp"
 
 long long inverse_reference(long long a, long long mod) {
     long long b = mod, x = 1, y = 0;

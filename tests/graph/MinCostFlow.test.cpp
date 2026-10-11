@@ -1,4 +1,4 @@
-#include "graph/MinCostFlow.cpp"
+#include "library/graph/MinCostFlow.cpp"
 
 struct InputEdge { int from, to, capacity, cost; };
 

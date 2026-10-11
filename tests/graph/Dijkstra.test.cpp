@@ -1,4 +1,4 @@
-#include "graph/Dijkstra.cpp"
+#include "library/graph/Dijkstra.cpp"
 #include "tests/graph/path_reference.hpp"
 
 int main() {

@@ -2,7 +2,7 @@
 
 ## 1. 原本と生成物
 
-テンプレートの原本は [templates/AtCoder.cpp](../templates/AtCoder.cpp)。各ライブラリの原本はカテゴリ別の `.cpp`。生成物は [competitive_programming.code-snippets](../snippets/competitive_programming.code-snippets)。ユーザーが提示したAtCoderテンプレートをそのまま使う。
+テンプレートの原本は [templates/AtCoder.cpp](../templates/AtCoder.cpp)。各ライブラリの原本は `library/カテゴリ/` 以下の `.cpp`。生成物は [competitive_programming.code-snippets](../snippets/competitive_programming.code-snippets)。ユーザーが提示したAtCoderテンプレートをそのまま使う。
 
 | 項目 | 要件 |
 | --- | --- |
@@ -17,7 +17,7 @@
 
 ライブラリの冒頭2行が想定と違う場合、推測で削らず生成を失敗させて確認する。同じ名前のソースが複数ある場合も重複prefixを作らずエラーにする。
 
-配置は [RepositoryLayout.md](RepositoryLayout.md) に従ってAIが行う。フォルダを移してもスニペット名・prefix・展開本文はファイル名とソースに基づく。掲載順は移動後のパス順に合わせて再生成する。`tree/` や新カテゴリのソースも自動収録する。
+配置は [RepositoryLayout.md](RepositoryLayout.md) に従ってAIが行う。フォルダを移してもスニペット名・prefix・展開本文はファイル名とソースに基づく。掲載順は移動後のパス順に合わせて再生成する。`library/tree/` や新カテゴリのソースも自動収録する。
 
 ## 2. 展開文字列の保持
 

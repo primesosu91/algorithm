@@ -74,8 +74,8 @@ class SnippetChecks(unittest.TestCase):
             (root / 'templates').mkdir()
             (root / TEMPLATE).write_bytes((ROOT / TEMPLATE).read_bytes())
             for name in ('graph', 'math'):
-                (root / name).mkdir()
-                (root / name / 'Same.cpp').write_text(PREAMBLE + '\n', encoding='utf-8')
+                (root / 'library' / name).mkdir(parents=True)
+                (root / 'library' / name / 'Same.cpp').write_text(PREAMBLE + '\n', encoding='utf-8')
             with self.assertRaises(ValueError):
                 build_snippets(root)
 

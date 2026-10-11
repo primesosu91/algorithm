@@ -1,4 +1,4 @@
-#include "data_structure/OrderedSet.cpp"
+#include "library/data_structure/OrderedSet.cpp"
 
 template<class Compare>
 void check_set(Compare compare) {

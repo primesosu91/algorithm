@@ -1,4 +1,4 @@
-#include "data_structure/SegmentTree.cpp"
+#include "library/data_structure/SegmentTree.cpp"
 
 long long sum_op(long long a, long long b) { return a + b; }
 long long sum_e() { return 0; }

@@ -1,4 +1,4 @@
-#include "graph/SCC.cpp"
+#include "library/graph/SCC.cpp"
 
 int main() {
     mt19937 rng(20261012);

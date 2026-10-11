@@ -1,4 +1,4 @@
-#include "algorithm/RunLengthEncoding.cpp"
+#include "library/algorithm/RunLengthEncoding.cpp"
 
 int main() {
     mt19937 rng(20261012);

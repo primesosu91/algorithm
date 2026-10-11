@@ -16,36 +16,38 @@
 
 配置更新: 2026-10-12、基準main `416edcb1754776c006600bda50a7bcb46a5588a6` のLCA・TreeDiameterの本体と対応テストを読み、`graph/` から `tree/` へ移動。両本体の内容・公開API・blob SHAは維持し、一覧・ソースリンク・catalog-sourceのパスを更新した。全体のAPI再調査を行った更新ではない。分類の基準は [RepositoryLayout.md](RepositoryLayout.md)。
 
+配置更新: 2026-10-12、基準main `ca75829056fbc9c6c6d927645dec8a1448fa7412` の全18ライブラリを `library/カテゴリ/` へ集約。一覧・ソースリンク・catalog-sourceのパスを更新し、全18の内容・公開API・blob SHAを維持した。API仕様を変更する更新ではない。
+
 ## 2. 全対象一覧
 
 | カテゴリ | ファイル・ライブラリ | 主な公開型／関数 |
 | --- | --- | --- |
-| `algorithm` | [RunLengthEncoding](../algorithm/RunLengthEncoding.cpp) | `run_length_encoding (string / vector<T>)` |
-| `data_structure` | [LazySegmentTree](../data_structure/LazySegmentTree.cpp) | `LazySegmentTree<T,op,e,F,mapping,composition,id>` |
-| `data_structure` | [OrderedSet](../data_structure/OrderedSet.cpp) | `OrderedSet<T,Compare> / iterator` |
-| `data_structure` | [SegmentTree](../data_structure/SegmentTree.cpp) | `SegmentTree<T,op,e>` |
-| `data_structure` | [UnionFind](../data_structure/UnionFind.cpp) | `UnionFind` |
-| `geometry` | [ConvexPolygon](../geometry/ConvexPolygon.cpp) | `Point / cross / is_convex` |
-| `graph` | [BellmanFord](../graph/BellmanFord.cpp) | `BellmanFord<T>` |
-| `graph` | [CycleDetection](../graph/CycleDetection.cpp) | `CycleDetection` |
-| `graph` | [Dijkstra](../graph/Dijkstra.cpp) | `Dijkstra<T>` |
-| `graph` | [MaxFlow](../graph/MaxFlow.cpp) | `MaxFlow / EdgeInfo` |
-| `graph` | [MinCostFlow](../graph/MinCostFlow.cpp) | `MinCostFlow / EdgeInfo / FlowResult` |
-| `graph` | [ProjectSelection](../graph/ProjectSelection.cpp) | `ProjectSelection / Penalty / FlowGraph` |
-| `graph` | [SCC](../graph/SCC.cpp) | `SCC` |
-| `graph` | [WarshallFloyd](../graph/WarshallFloyd.cpp) | `WarshallFloyd<T>` |
-| `math` | [ModInt](../math/ModInt.cpp) | `ModInt<MOD>` |
-| `math` | [Prime](../math/Prime.cpp) | `is_prime / factorize / divisors / prime_count / primitive_root` |
-| `tree` | [LCA](../tree/LCA.cpp) | `LCA` |
-| `tree` | [TreeDiameter](../tree/TreeDiameter.cpp) | `TreeDiameter` |
+| `algorithm` | [RunLengthEncoding](../library/algorithm/RunLengthEncoding.cpp) | `run_length_encoding (string / vector<T>)` |
+| `data_structure` | [LazySegmentTree](../library/data_structure/LazySegmentTree.cpp) | `LazySegmentTree<T,op,e,F,mapping,composition,id>` |
+| `data_structure` | [OrderedSet](../library/data_structure/OrderedSet.cpp) | `OrderedSet<T,Compare> / iterator` |
+| `data_structure` | [SegmentTree](../library/data_structure/SegmentTree.cpp) | `SegmentTree<T,op,e>` |
+| `data_structure` | [UnionFind](../library/data_structure/UnionFind.cpp) | `UnionFind` |
+| `geometry` | [ConvexPolygon](../library/geometry/ConvexPolygon.cpp) | `Point / cross / is_convex` |
+| `graph` | [BellmanFord](../library/graph/BellmanFord.cpp) | `BellmanFord<T>` |
+| `graph` | [CycleDetection](../library/graph/CycleDetection.cpp) | `CycleDetection` |
+| `graph` | [Dijkstra](../library/graph/Dijkstra.cpp) | `Dijkstra<T>` |
+| `graph` | [MaxFlow](../library/graph/MaxFlow.cpp) | `MaxFlow / EdgeInfo` |
+| `graph` | [MinCostFlow](../library/graph/MinCostFlow.cpp) | `MinCostFlow / EdgeInfo / FlowResult` |
+| `graph` | [ProjectSelection](../library/graph/ProjectSelection.cpp) | `ProjectSelection / Penalty / FlowGraph` |
+| `graph` | [SCC](../library/graph/SCC.cpp) | `SCC` |
+| `graph` | [WarshallFloyd](../library/graph/WarshallFloyd.cpp) | `WarshallFloyd<T>` |
+| `math` | [ModInt](../library/math/ModInt.cpp) | `ModInt<MOD>` |
+| `math` | [Prime](../library/math/Prime.cpp) | `is_prime / factorize / divisors / prime_count / primitive_root` |
+| `tree` | [LCA](../library/tree/LCA.cpp) | `LCA` |
+| `tree` | [TreeDiameter](../library/tree/TreeDiameter.cpp) | `TreeDiameter` |
 
 ## 3. ライブラリ別の公開宣言と仕様
 
 ### RunLengthEncoding
 
-ソース: [`algorithm/RunLengthEncoding.cpp`](../algorithm/RunLengthEncoding.cpp)
+ソース: [`library/algorithm/RunLengthEncoding.cpp`](../library/algorithm/RunLengthEncoding.cpp)
 
-<!-- catalog-source: algorithm/RunLengthEncoding.cpp 2490c1cdd542e3b0eee31fc02180f7e0e72cfae2 -->
+<!-- catalog-source: library/algorithm/RunLengthEncoding.cpp 2490c1cdd542e3b0eee31fc02180f7e0e72cfae2 -->
 
 状態を持つ struct は使わず、通常関数のオーバーロードと関数テンプレートを提供する。空入力は空の列。入力順を保ち、隣接して等しい値だけをまとめる（ソートや全体の頻度集計ではない）。配列版は `!=` 比較と値のコピーが必要。連続数は `int` の範囲で扱う。
 
@@ -58,9 +60,9 @@
 
 ### LazySegmentTree
 
-ソース: [`data_structure/LazySegmentTree.cpp`](../data_structure/LazySegmentTree.cpp)
+ソース: [`library/data_structure/LazySegmentTree.cpp`](../library/data_structure/LazySegmentTree.cpp)
 
-<!-- catalog-source: data_structure/LazySegmentTree.cpp 73ca088f5d8446329dd2a85ab82a41c15e94fa3b -->
+<!-- catalog-source: library/data_structure/LazySegmentTree.cpp 73ca088f5d8446329dd2a85ab82a41c15e94fa3b -->
 
 `T/op/e` に加え、作用型 `F`、`mapping(F,T)`、`composition(F,F)`、`id()` を指定する。`composition(f,g)` は **g の後に f** を適用する合成。作用は集約値と整合し、`id()` は恒等作用であることが必要。区間長が必要なら `T` 側に `len` 等を持たせる。`mapping` に区間長を別引数で渡す設計ではない。
 取得・探索も遅延伝播で内部配列を変更し得るため `const` ではない。`all_prod()` は遅延伝播しない。補助関数 `update/all_apply/push` は実装上 public のままだが、通常の要素操作APIとは分けて扱う。
@@ -99,9 +101,9 @@ template<class T, T (*op)(T, T), T (*e)(), class F, T (*mapping)(F, T), F (*comp
 
 ### OrderedSet
 
-ソース: [`data_structure/OrderedSet.cpp`](../data_structure/OrderedSet.cpp)
+ソース: [`library/data_structure/OrderedSet.cpp`](../library/data_structure/OrderedSet.cpp)
 
-<!-- catalog-source: data_structure/OrderedSet.cpp d5e69129b4e8361fc496f7c469fa2bf6fda4bf6b -->
+<!-- catalog-source: library/data_structure/OrderedSet.cpp d5e69129b4e8361fc496f7c469fa2bf6fda4bf6b -->
 
 `T` と比較型 `Compare = less<T>` を指定する、重複を持たない集合。厳密弱順序の比較関数が前提。順位・下限・上限は数値大小ではなく **Compare の順序** を使う。`less<T>` なら通常の昇順。構築時は空、乱数生成器は固定シード。
 外側の `root/comp/rng`、`Node` と木操作は private。公開メンバ変数はない。コピー構築・コピー代入は禁止され、明示したムーブ操作もない。イテレータは読取専用で、要素を書き換えられない。消去した要素への参照・イテレータ、および破棄後の参照・イテレータは無効。
@@ -150,9 +152,9 @@ struct iterator;
 
 ### SegmentTree
 
-ソース: [`data_structure/SegmentTree.cpp`](../data_structure/SegmentTree.cpp)
+ソース: [`library/data_structure/SegmentTree.cpp`](../library/data_structure/SegmentTree.cpp)
 
-<!-- catalog-source: data_structure/SegmentTree.cpp 03ff41bbb1f74eb970106545266be594a043dc13 -->
+<!-- catalog-source: library/data_structure/SegmentTree.cpp 03ff41bbb1f74eb970106545266be594a043dc13 -->
 
 `T`、結合演算 `op(T,T)`、単位元生成 `e()` を関数ポインタのテンプレート引数で指定する。結合則と単位元の性質が必要。非可換演算でも左右の順序を維持する。公開APIは0始まり・半開区間。明示した全メンバ関数に `const` は付いていないが、取得・探索は配列を変更しない。
 
@@ -183,9 +185,9 @@ template<class T, T (*op)(T, T), T (*e)()> struct SegmentTree;
 
 ### UnionFind
 
-ソース: [`data_structure/UnionFind.cpp`](../data_structure/UnionFind.cpp)
+ソース: [`library/data_structure/UnionFind.cpp`](../library/data_structure/UnionFind.cpp)
 
-<!-- catalog-source: data_structure/UnionFind.cpp 52213a1f40c4239411e43aacb768b17e299ee9f0 -->
+<!-- catalog-source: library/data_structure/UnionFind.cpp 52213a1f40c4239411e43aacb768b17e299ee9f0 -->
 
 代表的なスタイル基準。`n >= 0`。構築時は各頂点が独立し、`parent_or_size` は全て -1、`group_count = n`。再構築用の `init()` はない。頂点は `[0, n)`。
 `leader` は経路圧縮を行うため、代表元・判定・サイズ・一覧の取得も内部状態を変え得る。`groups()` の頂点は各成分内で昇順、成分は代表元番号の昇順で並ぶ。代表元番号自体は結合順に依存する。
@@ -216,9 +218,9 @@ struct UnionFind;
 
 ### ConvexPolygon
 
-ソース: [`geometry/ConvexPolygon.cpp`](../geometry/ConvexPolygon.cpp)
+ソース: [`library/geometry/ConvexPolygon.cpp`](../library/geometry/ConvexPolygon.cpp)
 
-<!-- catalog-source: geometry/ConvexPolygon.cpp befd23138399b2f46a87732bf52ecea24e6537e3 -->
+<!-- catalog-source: library/geometry/ConvexPolygon.cpp befd23138399b2f46a87732bf52ecea24e6537e3 -->
 
 ファイル名は `ConvexPolygon.cpp` だが、同名の struct はない。公開型は `Point`、公開関数は `cross/is_convex`。`Point` には明示したコンストラクタがなく、`Point{x,y}` 等で座標を与える。既定初期化だけでは座標は初期化されない。
 多角形の頂点を周上の順序で与え、**単純多角形**であることを前提とする。自己交差の検査はしない。連続3点の共線を許すため、厳密凸判定ではない。全点が一直線なら false。積と差が `__int128` に収まる必要がある。
@@ -245,9 +247,9 @@ struct Point;
 
 ### BellmanFord
 
-ソース: [`graph/BellmanFord.cpp`](../graph/BellmanFord.cpp)
+ソース: [`library/graph/BellmanFord.cpp`](../library/graph/BellmanFord.cpp)
 
-<!-- catalog-source: graph/BellmanFord.cpp 604849c233489ba68cfd05b4161d08b9fc911b58 -->
+<!-- catalog-source: library/graph/BellmanFord.cpp 604849c233489ba68cfd05b4161d08b9fc911b58 -->
 
 `T` はコスト・距離型。`n >= 0`、有向が既定。負辺を許す。到達性は `reached` で別管理し、INF 定数を持たない。有限な最短距離が `T` の範囲に収まることが前提。8バイト以下の整数型の作業距離には `__int128` を使う。
 辺IDは追加順の0始まり。無向時は逆辺を同一IDで `edges` に格納する。構築前の結果配列は空、構築後は未到達・負閉路影響のある距離値を有効な距離として扱わない。辺追加で `built=false`。
@@ -298,9 +300,9 @@ struct Edge;
 
 ### CycleDetection
 
-ソース: [`graph/CycleDetection.cpp`](../graph/CycleDetection.cpp)
+ソース: [`library/graph/CycleDetection.cpp`](../library/graph/CycleDetection.cpp)
 
-<!-- catalog-source: graph/CycleDetection.cpp c5f5544dc440c301083a3e1a402b0fe69289e48b -->
+<!-- catalog-source: library/graph/CycleDetection.cpp c5f5544dc440c301083a3e1a402b0fe69289e48b -->
 
 `n >= 0`。`directed` は **省略できない**。無向時は1回の add_edge で両向きを同一IDで登録する。判定・復元を初めて呼んだ際に遅延探索し、最初に見つけた1つのサイクルを保持する。辺追加後は検索キャッシュを無効化し、頂点列・辺列を消す。
 サイクルの頂点列は始点を末尾に重複させない。頂点数と辺数は同じで、辺 i は頂点 i から頂点 `(i+1)%m` に対応する。自己ループ・無向の平行辺も辺IDで識別する。
@@ -334,9 +336,9 @@ struct CycleDetection;
 
 ### Dijkstra
 
-ソース: [`graph/Dijkstra.cpp`](../graph/Dijkstra.cpp)
+ソース: [`library/graph/Dijkstra.cpp`](../library/graph/Dijkstra.cpp)
 
-<!-- catalog-source: graph/Dijkstra.cpp 8f95b4587063347fdf154fcb05f19f19aa8550e5 -->
+<!-- catalog-source: library/graph/Dijkstra.cpp 8f95b4587063347fdf154fcb05f19f19aa8550e5 -->
 
 `T` は距離・コストの型。`n >= 0`、有向が既定。辺は非負で `cost < INF`、有限な最短距離も `INF` 未満が前提。`INF` は static constexpr で `numeric_limits<T>::max()/2`。
 `add_edge` の辺IDは追加順の0始まり。無向時は1回の追加で両向きに格納し、同一IDを共有する。`build(start)` 後に参照し、辺を追加すると `built=false` になり再構築が必要。初期距離は INF、親は -1、始点は -1。
@@ -383,9 +385,9 @@ struct Edge;
 
 ### LCA
 
-ソース: [`tree/LCA.cpp`](../tree/LCA.cpp)
+ソース: [`library/tree/LCA.cpp`](../library/tree/LCA.cpp)
 
-<!-- catalog-source: tree/LCA.cpp 9cc01adcd28abd1c975ca854751cb0bce9b80cc1 -->
+<!-- catalog-source: library/tree/LCA.cpp 9cc01adcd28abd1c975ca854751cb0bce9b80cc1 -->
 
 `n > 0` の **連結な無向木**を前提とする。重みは扱わず距離は辺数。1回の add_edge で両向きを登録する。構築時は depth/parent が -1。辺追加後は同じ根でも build を再実行する。
 `built` フラグはない。各取得関数は対象の深さが -1 でないこと等を assert するが、辺追加による古い結果の無効化・木の妥当性検査は行わない。森・閉路付きグラフを一般に処理できる設計ではない。
@@ -418,9 +420,9 @@ struct LCA;
 
 ### MaxFlow
 
-ソース: [`graph/MaxFlow.cpp`](../graph/MaxFlow.cpp)
+ソース: [`library/graph/MaxFlow.cpp`](../library/graph/MaxFlow.cpp)
 
-<!-- catalog-source: graph/MaxFlow.cpp 0efd635e006549d72006e2f61078699e160dc8e5 -->
+<!-- catalog-source: library/graph/MaxFlow.cpp 0efd635e006549d72006e2f61078699e160dc8e5 -->
 
 `n >= 0`、非負容量の有向ネットワーク。構築時は空の残余グラフ。追加順の0始まりの辺番号を元の辺に割り当てる。逆辺は補助の残余辺で、元の辺一覧に含まれない。自己ループ用の逆辺位置補正がある。
 `flow` は残余グラフを変更し、返すのは **その呼出しで追加できた流量**。累計は各辺の get_edge 等から確認する。構築済みフラグ・reset API・流量上限を指定するオーバーロードはない。始点終点は異なり、流量合計が `long long` に収まる必要がある。
@@ -473,9 +475,9 @@ struct Edge;
 
 ### MinCostFlow
 
-ソース: [`graph/MinCostFlow.cpp`](../graph/MinCostFlow.cpp)
+ソース: [`library/graph/MinCostFlow.cpp`](../library/graph/MinCostFlow.cpp)
 
-<!-- catalog-source: graph/MinCostFlow.cpp eb45f905e889965b10c6730c150ecd3635816d7a -->
+<!-- catalog-source: library/graph/MinCostFlow.cpp eb45f905e889965b10c6730c150ecd3635816d7a -->
 
 確認版: 2026-10-12、基準コミット `34eede7d6d376275e1f25bb93403e63b8abd9bc8` に対する今回の修正ソース。上記blob SHAで特定する。
 
@@ -543,9 +545,9 @@ struct Edge;
 
 ### ProjectSelection
 
-ソース: [`graph/ProjectSelection.cpp`](../graph/ProjectSelection.cpp)
+ソース: [`library/graph/ProjectSelection.cpp`](../library/graph/ProjectSelection.cpp)
 
-<!-- catalog-source: graph/ProjectSelection.cpp 087135952c0e40cdcfcd243c196256488ebf282d -->
+<!-- catalog-source: library/graph/ProjectSelection.cpp 087135952c0e40cdcfcd243c196256488ebf282d -->
 
 `n >= 0`。各要素を選ぶ／選ばない最適化で、初期利益は全て0。追加APIは利益を加算し、ペナルティ・依存を蓄積する。`solve()` は **1回のみ**、実行後の追加も不可。`selected()` は solve 後のみ。
 利益・ペナルティ容量の集計、依存用容量（有限容量合計＋1）と結果は実装の `long long` 範囲条件を満たす必要がある。内部で Dinic を実装しており、外部の MaxFlow.cpp に依存しない。
@@ -615,9 +617,9 @@ struct Edge;
 
 ### SCC
 
-ソース: [`graph/SCC.cpp`](../graph/SCC.cpp)
+ソース: [`library/graph/SCC.cpp`](../library/graph/SCC.cpp)
 
-<!-- catalog-source: graph/SCC.cpp a9cf9244049a055edcbaa287c7d3c8d0573cabb2 -->
+<!-- catalog-source: library/graph/SCC.cpp a9cf9244049a055edcbaa287c7d3c8d0573cabb2 -->
 
 `n >= 0` の有向グラフ。構築時は辺なし、`component_ids` は -1。辺追加後は再構築する。構築後の成分IDは0始まりのトポロジカル順で、異なる成分間の `u -> v` では `component_id(u) < component_id(v)`。成分内の頂点順は探索順であり昇順保証ではない。
 
@@ -649,9 +651,9 @@ struct SCC;
 
 ### TreeDiameter
 
-ソース: [`tree/TreeDiameter.cpp`](../tree/TreeDiameter.cpp)
+ソース: [`library/tree/TreeDiameter.cpp`](../library/tree/TreeDiameter.cpp)
 
-<!-- catalog-source: tree/TreeDiameter.cpp af703fa4be1ee9dc465e4b63bf9e15f076a578a5 -->
+<!-- catalog-source: library/tree/TreeDiameter.cpp af703fa4be1ee9dc465e4b63bf9e15f076a578a5 -->
 
 `n >= 1` の **連結な無向木**。重みは正、パス重み和は `long long` の範囲が前提。辺IDは追加順の0始まり、両向きで同一ID。add_edge の返り値はどちらも void。辺追加後は `built=false`、取得前に build。
 単一頂点の場合は長さ0・端点 `{0,0}`・頂点列 `{0}`・辺列は空。頂点列は端点 first から second の順で、辺列の長さは頂点列の長さより1少ない。複数の直径のうち選ばれる1つの端点順は保証しない。
@@ -699,9 +701,9 @@ struct Edge;
 
 ### WarshallFloyd
 
-ソース: [`graph/WarshallFloyd.cpp`](../graph/WarshallFloyd.cpp)
+ソース: [`library/graph/WarshallFloyd.cpp`](../library/graph/WarshallFloyd.cpp)
 
-<!-- catalog-source: graph/WarshallFloyd.cpp d788589f3cc2b3b8b48038e57396bc3348611a0a -->
+<!-- catalog-source: library/graph/WarshallFloyd.cpp d788589f3cc2b3b8b48038e57396bc3348611a0a -->
 
 `T` は符号を含むコスト・距離計算に使用する型。`n >= 0`、有向が既定。`INF` は非staticの const メンバで `numeric_limits<T>::max()/4`。辺コストは `-INF < cost < INF`、単純パスの重みの絶対値も INF 未満が前提。
 構築直後は初期距離の対角成分が0、その他はINF。`add_edge` ごとに内部辺IDを進めるが **返り値は void**。同じ端点では厳密に小さいコストのみ採用し、同コストの既存辺を保持する。無向時は両向きが同一ID。辺追加で `built=false`、`build()` が初期距離から再計算する。
@@ -743,9 +745,9 @@ template<class T> struct WarshallFloyd;
 
 ### ModInt
 
-ソース: [`math/ModInt.cpp`](../math/ModInt.cpp)
+ソース: [`library/math/ModInt.cpp`](../library/math/ModInt.cpp)
 
-<!-- catalog-source: math/ModInt.cpp 1e654cdc63d8eccffdf1066bebc13d5c43091db9 -->
+<!-- catalog-source: library/math/ModInt.cpp 1e654cdc63d8eccffdf1066bebc13d5c43091db9 -->
 
 `MOD` はコンパイル時の int で `MOD > 1` を static_assert する。逆元・除算は **MOD が素数**かつ除数が0でないことが前提。MOD の素数性を実装が自動検査するわけではない。
 `value` は `[0,MOD)` に正規化された値で、直接変更して範囲外にすると演算の前提を壊す。`val()` は値取得の慣習名として維持する。二項演算・比較・入出力は friend 非メンバ関数であり、メンバ関数と区別する。
@@ -785,9 +787,9 @@ template<int MOD> struct ModInt;
 
 ### Prime
 
-ソース: [`math/Prime.cpp`](../math/Prime.cpp)
+ソース: [`library/math/Prime.cpp`](../library/math/Prime.cpp)
 
-<!-- catalog-source: math/Prime.cpp b9dc888e30d593709accc240a459777a363c40f9 -->
+<!-- catalog-source: library/math/Prime.cpp b9dc888e30d593709accc240a459777a363c40f9 -->
 
 同名の struct はなく、公開の通常関数は `is_prime/factorize/divisors/prime_count/primitive_root`。素数列の公開 enumerate 関数は **実装されていない**。入力上限はソースコメント・assert に基づくもので、今回上限付近の速度や数学的正当性を新たに検証したものではない。
 prime_count の前計算は最初の必要な呼出しで遅延実行し、内部キャッシュを保持する。`prime_internal` は通常の namespace なのでC++上は外部から参照できるが、内部専用として区別する。
@@ -902,7 +904,7 @@ namespace prime_internal;
 ## 6. 新規設計前の確認手順
 
 1. [開発規約](LibraryDevelopmentRules.md) を読み、このカタログの確認SHAと現在のGitHubソースを照合する。参照できない場合は未確認のファイルとコミットを明記し、必要なソースだけ提示してもらう。記憶からAPIを補完しない。
-2. 最新の [UnionFind.cpp](../data_structure/UnionFind.cpp) を読み、型・コメント・添字・初期化・全体の書式を確認する。常設コピーがあってもGitHub版で確認する。
+2. 最新の [UnionFind.cpp](../library/data_structure/UnionFind.cpp) を読み、型・コメント・添字・初期化・全体の書式を確認する。常設コピーがあってもGitHub版で確認する。
 3. 以下の表から近いAPIを選び、**関連する実装本体**を読む。名前だけの類似より、操作の対象・意味・保存方式が近いものを優先する。
 4. 新規API案に完全なシグネチャ、引数の意味・順序、返り値、更新か照会か、前提、未該当値、構築順、コピー／参照と、ソース・テストの予定パスと分類理由を記す。配置先はRepositoryLayoutに従ってAIが決める。
 5. 同じ意味の別名・同じ名前の別の意味を横断検索する。違いを残す場合は理由を説明する。通常の新規開発・ソース修正では要件と既存設計からAPI案を示し、明示的な承認後に実装へ進む。破壊的変更や決められない重要な仕様は、開発規約・AGENTS.mdに従って確認する。
@@ -928,7 +930,7 @@ namespace prime_internal;
 ```text
 ### ライブラリ名
 ソースへの相対リンク
-catalog-source コメント: カテゴリ/ファイル.cpp と、git hash-object で取得した40桁のblob SHA
+catalog-source コメント: library/カテゴリ/ファイル.cpp と、git hash-object で取得した40桁のblob SHA
 確認したコミット: 完全なコミットSHA（部分更新時はその項目に記す）
 テンプレート・前提・初期状態・構築順・添字／区間
 公開型・名前空間の宣言
