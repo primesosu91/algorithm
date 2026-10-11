@@ -14,6 +14,8 @@
 
 追加確認: 2026-10-12、基準main `34eede7d6d376275e1f25bb93403e63b8abd9bc8` の全18ソースを全文確認。MinCostFlowのみ不具合修正を同時反映し、各catalog-sourceを実際のソースへ合わせた。
 
+配置更新: 2026-10-12、基準main `416edcb1754776c006600bda50a7bcb46a5588a6` のLCA・TreeDiameterの本体と対応テストを読み、`graph/` から `tree/` へ移動。両本体の内容・公開API・blob SHAは維持し、一覧・ソースリンク・catalog-sourceのパスを更新した。全体のAPI再調査を行った更新ではない。分類の基準は [RepositoryLayout.md](RepositoryLayout.md)。
+
 ## 2. 全対象一覧
 
 | カテゴリ | ファイル・ライブラリ | 主な公開型／関数 |
@@ -27,15 +29,15 @@
 | `graph` | [BellmanFord](../graph/BellmanFord.cpp) | `BellmanFord<T>` |
 | `graph` | [CycleDetection](../graph/CycleDetection.cpp) | `CycleDetection` |
 | `graph` | [Dijkstra](../graph/Dijkstra.cpp) | `Dijkstra<T>` |
-| `graph` | [LCA](../graph/LCA.cpp) | `LCA` |
 | `graph` | [MaxFlow](../graph/MaxFlow.cpp) | `MaxFlow / EdgeInfo` |
 | `graph` | [MinCostFlow](../graph/MinCostFlow.cpp) | `MinCostFlow / EdgeInfo / FlowResult` |
 | `graph` | [ProjectSelection](../graph/ProjectSelection.cpp) | `ProjectSelection / Penalty / FlowGraph` |
 | `graph` | [SCC](../graph/SCC.cpp) | `SCC` |
-| `graph` | [TreeDiameter](../graph/TreeDiameter.cpp) | `TreeDiameter` |
 | `graph` | [WarshallFloyd](../graph/WarshallFloyd.cpp) | `WarshallFloyd<T>` |
 | `math` | [ModInt](../math/ModInt.cpp) | `ModInt<MOD>` |
 | `math` | [Prime](../math/Prime.cpp) | `is_prime / factorize / divisors / prime_count / primitive_root` |
+| `tree` | [LCA](../tree/LCA.cpp) | `LCA` |
+| `tree` | [TreeDiameter](../tree/TreeDiameter.cpp) | `TreeDiameter` |
 
 ## 3. ライブラリ別の公開宣言と仕様
 
@@ -381,9 +383,9 @@ struct Edge;
 
 ### LCA
 
-ソース: [`graph/LCA.cpp`](../graph/LCA.cpp)
+ソース: [`tree/LCA.cpp`](../tree/LCA.cpp)
 
-<!-- catalog-source: graph/LCA.cpp 9cc01adcd28abd1c975ca854751cb0bce9b80cc1 -->
+<!-- catalog-source: tree/LCA.cpp 9cc01adcd28abd1c975ca854751cb0bce9b80cc1 -->
 
 `n > 0` の **連結な無向木**を前提とする。重みは扱わず距離は辺数。1回の add_edge で両向きを登録する。構築時は depth/parent が -1。辺追加後は同じ根でも build を再実行する。
 `built` フラグはない。各取得関数は対象の深さが -1 でないこと等を assert するが、辺追加による古い結果の無効化・木の妥当性検査は行わない。森・閉路付きグラフを一般に処理できる設計ではない。
@@ -647,9 +649,9 @@ struct SCC;
 
 ### TreeDiameter
 
-ソース: [`graph/TreeDiameter.cpp`](../graph/TreeDiameter.cpp)
+ソース: [`tree/TreeDiameter.cpp`](../tree/TreeDiameter.cpp)
 
-<!-- catalog-source: graph/TreeDiameter.cpp af703fa4be1ee9dc465e4b63bf9e15f076a578a5 -->
+<!-- catalog-source: tree/TreeDiameter.cpp af703fa4be1ee9dc465e4b63bf9e15f076a578a5 -->
 
 `n >= 1` の **連結な無向木**。重みは正、パス重み和は `long long` の範囲が前提。辺IDは追加順の0始まり、両向きで同一ID。add_edge の返り値はどちらも void。辺追加後は `built=false`、取得前に build。
 単一頂点の場合は長さ0・端点 `{0,0}`・頂点列 `{0}`・辺列は空。頂点列は端点 first から second の順で、辺列の長さは頂点列の長さより1少ない。複数の直径のうち選ばれる1つの端点順は保証しない。
@@ -902,8 +904,8 @@ namespace prime_internal;
 1. [開発規約](LibraryDevelopmentRules.md) を読み、このカタログの確認SHAと現在のGitHubソースを照合する。参照できない場合は未確認のファイルとコミットを明記し、必要なソースだけ提示してもらう。記憶からAPIを補完しない。
 2. 最新の [UnionFind.cpp](../data_structure/UnionFind.cpp) を読み、型・コメント・添字・初期化・全体の書式を確認する。常設コピーがあってもGitHub版で確認する。
 3. 以下の表から近いAPIを選び、**関連する実装本体**を読む。名前だけの類似より、操作の対象・意味・保存方式が近いものを優先する。
-4. 新規API案に完全なシグネチャ、引数の意味・順序、返り値、更新か照会か、前提、未該当値、構築順、コピー／参照を記す。
-5. 同じ意味の別名・同じ名前の別の意味を横断検索する。違いを残す場合は理由を説明する。通常の新規開発では要件と既存設計から決められるAPIを説明して実装へ進む。破壊的変更や決められない重要な仕様は、開発規約・AGENTS.mdに従って確認する。
+4. 新規API案に完全なシグネチャ、引数の意味・順序、返り値、更新か照会か、前提、未該当値、構築順、コピー／参照と、ソース・テストの予定パスと分類理由を記す。配置先はRepositoryLayoutに従ってAIが決める。
+5. 同じ意味の別名・同じ名前の別の意味を横断検索する。違いを残す場合は理由を説明する。通常の新規開発・ソース修正では要件と既存設計からAPI案を示し、明示的な承認後に実装へ進む。破壊的変更や決められない重要な仕様は、開発規約・AGENTS.mdに従って確認する。
 
 | 新規設計の対象 | まず読む既存ソース |
 | --- | --- |

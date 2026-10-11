@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check catalog coverage, reviewed Git blob IDs, and relative Markdown links.
+"""Check source/test layout, catalog coverage, Git blob IDs, and Markdown links.
 
 Standard library only. This is a documentation consistency check, not a C++
 parser or correctness test. No files are modified.
@@ -22,6 +22,30 @@ def library_sources(root):
     }
 
 
+def check_layout(root, sources):
+    """Check matching paths/includes without fixing the set of categories."""
+    errors = []
+    for name in sorted(sources):
+        relative = Path(name)
+        if (len(relative.parts) < 2 or relative.parts[0] in {'Rule', 'records'}
+                or relative.parts[0].startswith('.')):
+            errors.append(f'Library must be in a source category: {name}')
+        test = root / 'tests' / relative.with_suffix('.test.cpp')
+        if not test.is_file():
+            errors.append(f'Missing matching regression test: {test.relative_to(root)}')
+            continue
+        includes = re.findall(r'^\s*#\s*include\s*"([^"]+)"',
+                              test.read_text(encoding='utf-8'), flags=re.MULTILINE)
+        if name not in includes:
+            errors.append(f'Test must include {name}: {test.relative_to(root)}')
+    for test in sorted((root / 'tests').rglob('*.test.cpp')):
+        relative = test.relative_to(root / 'tests').as_posix()
+        name = relative[:-len('.test.cpp')] + '.cpp'
+        if name not in sources:
+            errors.append(f'Regression test has no matching library: {test.relative_to(root)}')
+    return errors
+
+
 def check(root):
     catalog = root / 'Rule' / 'NamingAndAPI.md'
     errors = []
@@ -40,9 +64,9 @@ def check(root):
             errors.append(f'Duplicate catalog source: {name}')
         recorded[name] = sha
 
-    # Current category layout; root-level libraries are also eligible.
-    # Test programs or build output do not become library entries.
+    # Discover categories dynamically; test programs/build output stay excluded.
     actual = library_sources(root)
+    errors.extend(check_layout(root, actual))
     for name in sorted(actual.keys() - recorded.keys()):
         errors.append(f'Library missing from catalog: {name}')
     for name in sorted(recorded.keys() - actual.keys()):
@@ -83,7 +107,7 @@ def main():
         for error in errors:
             print(f'ERROR: {error}', file=sys.stderr)
         return 1
-    print('OK: coverage, source fingerprints, and relative file links agree.')
+    print('OK: source/test layout, coverage, source fingerprints, and relative links agree.')
     return 0
 
 

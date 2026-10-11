@@ -1,4 +1,4 @@
-#include "graph/TreeDiameter.cpp"
+#include "tree/TreeDiameter.cpp"
 
 int main() {
     mt19937 rng(20261012);

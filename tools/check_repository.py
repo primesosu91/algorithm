@@ -23,6 +23,7 @@ REQUIRED = (
     'Rule/CompetitiveProgrammingGuide.md',
     'Rule/DebugRules.md',
     'Rule/LibraryWorkflow.md',
+    'Rule/RepositoryLayout.md',
     'Rule/README.md',
     'Rule/SnippetRules.md',
     'Rule/ProjectInstructions.md',
@@ -80,7 +81,7 @@ def main():
         return 1
 
     flags = ['-std=c++23', '-Wall', '-Wextra', '-I', str(root)]
-    print('TEST snippet generation and expansion', flush=True)
+    print('TEST repository layout and snippet generation/expansion', flush=True)
     if not run([sys.executable, '-m', 'unittest', 'discover', '-s', 'tests/tools',
                 '-p', 'test_*.py'], root, 30):
         return 1
