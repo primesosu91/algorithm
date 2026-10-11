@@ -5,12 +5,14 @@
 - ソースコードの唯一の正式な原本: [primesosu91/algorithm](https://github.com/primesosu91/algorithm) の `main`。
 - 調査基準: 2026-10-12（日本時間）、コミット [`eecc66b4fef2131aeedb8633d17763f45fe75c79`](https://github.com/primesosu91/algorithm/commit/eecc66b4fef2131aeedb8633d17763f45fe75c79)。当時の全18 `.cpp` を全文確認した。
 - この資料は既存設計を正確に参照するためのカタログ。GitHubの最新実装と差異があれば実装を正とし、該当項目を更新する。共通方針は [開発規約](LibraryDevelopmentRules.md)、作業手順は [LibraryWorkflow.md](LibraryWorkflow.md)。
-- 命名やAPIをこの資料へ収録しても正式採用の認定にはならない。現行ソース版と対応する最初のAC問題・提出ID・再検証状況は、GitHubのファイルだけからは未確認。従来のユーザーの採用記録は維持する。
+- 命名やAPIをこの資料へ収録しても正式採用の認定にはならない。AC・対象版・採用の記録先は [LibraryStatus.md](../records/LibraryStatus.md)。現行ソース版と対応する過去のAC問題・提出IDが未移行の場合は未確認と明記し、従来の採用記録は維持する。
 - 一覧はソースに**明示された**コンストラクタ、デストラクタ、削除された操作、公開関数、friend関数、公開型・変数を対象とする。コンパイラが暗黙生成する特殊メンバやC++23が合成する候補は列挙しない。
 - public の内部補助と通常の利用APIを区別する。公開変数への直接書込みや補助関数の単独実行が安全であることを意味しない。private のメンバは公開一覧に含めない。
 - シグネチャの空白・改行のみを正規化し、テンプレート引数、既定引数、参照、const、friend、delete を保持する。コンストラクタの初期化リストは仕様説明に記す。
 
 各項目のソースリンクは通常の `main` 参照。直下の `catalog-source` コメントにその項目の確認済みGit blob SHAを保持する。コメントも含めてソースが変わったら照合対象になる。全体の基準コミットは初回調査の記録であり、以後の更新では個別SHAと追記した確認コミットを使う。
+
+追加確認: 2026-10-12、基準main `34eede7d6d376275e1f25bb93403e63b8abd9bc8` の全18ソースを全文確認。MinCostFlowのみ不具合修正を同時反映し、各catalog-sourceを実際のソースへ合わせた。
 
 ## 2. 全対象一覧
 
@@ -471,11 +473,13 @@ struct Edge;
 
 ソース: [`graph/MinCostFlow.cpp`](../graph/MinCostFlow.cpp)
 
-<!-- catalog-source: graph/MinCostFlow.cpp f37b07a7c5a2c21f269804df3ab9fc43c9d3fb56 -->
+<!-- catalog-source: graph/MinCostFlow.cpp eb45f905e889965b10c6730c150ecd3635816d7a -->
+
+確認版: 2026-10-12、基準コミット `34eede7d6d376275e1f25bb93403e63b8abd9bc8` に対する今回の修正ソース。上記blob SHAで特定する。
 
 `n >= 0` の有向ネットワーク。`add_edge` は `flow/slope` を初めて呼ぶ **前のみ**で、元の容量・単位コストはともに非負。逆辺のコストは負になる。元の辺番号は追加順の0始まり。
 `flow/slope` は残余グラフを変更する。戻り値はその呼出しの追加流量・追加費用で、過去の累計ではない。`slope` は `{0,0}` を先頭とし、同じ限界費用の連続区間を圧縮する。再呼出し時、既存フローがあれば現在の残余グラフでポテンシャルを初期化する。
-`source != sink`、`flow_limit >= 0`。流量・費用・途中計算は実装の assert と番兵 `max()/4` を含む表現可能範囲を満たす必要がある。任意の始点終点変更後の負閉路を一般に処理する保証は確認していない。
+`source != sink`、`flow_limit >= 0`。流量・費用・途中計算は `long long` の表現可能範囲と実装のassertを満たす必要がある。距離の初期値は `max()/4` だが、到達性は別のフラグで管理し、この値以上の有効な距離も扱う。任意の始点終点変更後の負閉路を一般に処理する保証は確認していない。
 
 公開型・名前空間の宣言（テンプレートを含む）:
 
@@ -882,7 +886,7 @@ namespace prime_internal;
 | 復元の列長 | パスは頂点数=辺数+1、サイクルは始点重複なしで頂点数=辺数 | 閉路の閉じる辺の扱いを通常パスへ合わせない |
 | 負閉路の判定範囲 | BellmanFord.has_negative_cycle は始点から到達可能な部分、WarshallFloyd はグラフ全体 | 同名でも判定対象が異なる。BF.is_negative(v) と WF.is_negative_infinite(from,to) の対象の違いも維持 |
 | 未到達の表現 | Dijkstra は INF、WarshallFloyd は INF、BellmanFord は reached を別に持つ | BF.dist の無効値を INF と推測しない。各APIの reachable・負閉路判定を使う |
-| INF | Dijkstra は static constexpr max()/2、WarshallFloyd は非static const max()/4、MinCostFlow の max()/4 は関数内の作業番兵 | 値・宣言・距離の扱える範囲まで異なるため一律の共通定数にはしない |
+| INF | Dijkstra は static constexpr max()/2、WarshallFloyd は非static const max()/4、MinCostFlow の max()/4 は作業距離の初期値（到達性は別管理） | 値・宣言・距離の扱える範囲まで異なるため一律の共通定数にはしない |
 | cost/weight | 最短路は cost、木の直径は weight、MCF.EdgeInfo.cost は単位費用、FlowResult.cost は追加総費用 | 同じ数値型でも意味を明記する。型・所属情報なしに cost を比較しない |
 | capacity | フローの Edge は残余容量、EdgeInfo は元の容量 | 同名でも保存対象が違う。get_edge が元容量を復元することを明記 |
 | edges | BellmanFord.edges は公開配列（無向で2件）、MaxFlow/MinCostFlow.edges() は元の辺の情報を返す関数 | 同名を見て同じ型・件数・用途と判断しない |
@@ -899,7 +903,7 @@ namespace prime_internal;
 2. 最新の [UnionFind.cpp](../data_structure/UnionFind.cpp) を読み、型・コメント・添字・初期化・全体の書式を確認する。常設コピーがあってもGitHub版で確認する。
 3. 以下の表から近いAPIを選び、**関連する実装本体**を読む。名前だけの類似より、操作の対象・意味・保存方式が近いものを優先する。
 4. 新規API案に完全なシグネチャ、引数の意味・順序、返り値、更新か照会か、前提、未該当値、構築順、コピー／参照を記す。
-5. 同じ意味の別名・同じ名前の別の意味を横断検索する。違いを残す場合は理由を説明する。ユーザーとの設計合意を経て実装する。
+5. 同じ意味の別名・同じ名前の別の意味を横断検索する。違いを残す場合は理由を説明する。通常の新規開発では要件と既存設計から決められるAPIを説明して実装へ進む。破壊的変更や決められない重要な仕様は、開発規約・AGENTS.mdに従って確認する。
 
 | 新規設計の対象 | まず読む既存ソース |
 | --- | --- |
@@ -938,6 +942,6 @@ catalog-source コメント: カテゴリ/ファイル.cpp と、git hash-object
 
 - 対象リポジトリ、main、当時の全18 `.cpp` と README、ソース内の公開宣言・実際の処理を確認済み。別リポジトリ・ローカル専用・未コミットのライブラリは対象外で、存在も未確認。
 - 現行各ソース版のAC問題名・提出ID・採用日の対応は未確認。過去チャットの報告を今回のソース版の新たな認証として扱わない。
-- 今回は管理資料の整備であり、全アルゴリズムの境界・乱択・最大入力テストや性能再測定を行っていない。既存実装のコード・API・採用状態は変更していない。
+- 2026-10-12の再整備では全18ソースを読み、MinCostFlowの距離と未到達の衝突を修正した。公開シグネチャは維持。全18の保存済み回帰テストを追加して検証するが、全入力・最大規模・全テンプレート型の正当性を認定しない。具体的な検証結果と再ACの状態はrecordsを参照する。
 - C++23 の運用環境でも `<bits/stdc++.h>`・`__int128` はGNU系の拡張であり、全C++コンパイラでの移植性を認定していない。
 - テンプレート引数が満たす代数的条件や距離・費用の範囲は利用側でも確認する。assert が全条件を検証するとは限らず、無効化した assert によって前提が消えるわけではない。

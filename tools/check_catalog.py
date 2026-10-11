@@ -12,11 +12,21 @@ from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
 
+def library_sources(root):
+    """Keep coverage and compilation on the same set of library files."""
+    excluded = {'tests', 'test', 'tools', 'build', '.git', 'templates', 'snippets'}
+    return {
+        p.relative_to(root).as_posix(): p
+        for p in root.rglob('*.cpp')
+        if not any(part in excluded for part in p.relative_to(root).parts[:-1])
+    }
+
+
 def check(root):
-    catalog = root / 'docs' / 'NamingAndAPI.md'
+    catalog = root / 'Rule' / 'NamingAndAPI.md'
     errors = []
     if not catalog.is_file():
-        return ['Missing docs/NamingAndAPI.md']
+        return ['Missing Rule/NamingAndAPI.md']
 
     text = catalog.read_text(encoding='utf-8')
     declarations = re.findall(
@@ -32,12 +42,7 @@ def check(root):
 
     # Current category layout; root-level libraries are also eligible.
     # Test programs or build output do not become library entries.
-    excluded = {'tests', 'test', 'tools', 'build', '.git'}
-    actual = {
-        p.relative_to(root).as_posix(): p
-        for p in root.rglob('*.cpp')
-        if not any(part in excluded for part in p.relative_to(root).parts[:-1])
-    }
+    actual = library_sources(root)
     for name in sorted(actual.keys() - recorded.keys()):
         errors.append(f'Library missing from catalog: {name}')
     for name in sorted(recorded.keys() - actual.keys()):
@@ -48,7 +53,11 @@ def check(root):
         if sha != recorded[name]:
             errors.append(f'Source changed; review catalog: {name} (current blob {sha})')
 
-    markdown = [root / 'README.md', *sorted((root / 'docs').rglob('*.md'))]
+    markdown = [root / 'README.md', *sorted((root / 'Rule').rglob('*.md'))]
+    for directory in ('tests', 'tools', 'records'):
+        markdown.extend(sorted((root / directory).rglob('*.md')))
+    if (root / 'AGENTS.md').is_file():
+        markdown.append(root / 'AGENTS.md')
     for path in markdown:
         if not path.is_file():
             errors.append(f'Missing Markdown file: {path.relative_to(root)}')

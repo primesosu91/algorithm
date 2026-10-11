@@ -42,13 +42,16 @@ private:
         const long long inf = numeric_limits<long long>::max() / 4;
 
         fill(distance.begin(), distance.end(), inf);
+        // 大きな距離と未到達を区別し、番兵の値で到達性を判定しない
+        vector<bool> reached(n, false);
         distance[source] = 0;
+        reached[source] = true;
 
         for (int iteration = 0; iteration < n - 1; iteration++) {
             bool updated = false;
 
             for (int v = 0; v < n; v++) {
-                if (distance[v] == inf) continue;
+                if (!reached[v]) continue;
 
                 for (const auto& edge : graph[v]) {
                     if (edge.capacity == 0) continue;
@@ -58,9 +61,10 @@ private:
                     assert(numeric_limits<long long>::min() <= next_distance);
                     assert(next_distance <= numeric_limits<long long>::max());
 
-                    if ((long long)next_distance >= distance[edge.to]) continue;
+                    if (reached[edge.to] && (long long)next_distance >= distance[edge.to]) continue;
 
                     distance[edge.to] = (long long)next_distance;
+                    reached[edge.to] = true;
                     updated = true;
                 }
             }
@@ -69,7 +73,7 @@ private:
         }
 
         for (int v = 0; v < n; v++) {
-            if (distance[v] != inf) {
+            if (reached[v]) {
                 potential[v] = distance[v];
             }
         }
@@ -80,12 +84,15 @@ private:
         const long long inf = numeric_limits<long long>::max() / 4;
 
         fill(distance.begin(), distance.end(), inf);
+        // 大きな距離と未到達を区別し、番兵の値で到達性を判定しない
+        vector<bool> reached(n, false);
         fill(previous_vertex.begin(), previous_vertex.end(), -1);
         fill(previous_edge.begin(), previous_edge.end(), -1);
 
         priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<pair<long long, int>>> que;
 
         distance[source] = 0;
+        reached[source] = true;
         que.push({0, source});
 
         while (!que.empty()) {
@@ -108,9 +115,10 @@ private:
 
                 assert(next_distance <= numeric_limits<long long>::max());
 
-                if ((long long)next_distance >= distance[edge.to]) continue;
+                if (reached[edge.to] && (long long)next_distance >= distance[edge.to]) continue;
 
                 distance[edge.to] = (long long)next_distance;
+                reached[edge.to] = true;
                 previous_vertex[edge.to] = v;
                 previous_edge[edge.to] = edge_index;
 
@@ -118,11 +126,11 @@ private:
             }
         }
 
-        if (distance[sink] == inf) return false;
+        if (!reached[sink]) return false;
 
         // 到達可能な頂点のポテンシャルを更新
         for (int v = 0; v < n; v++) {
-            if (distance[v] == inf) continue;
+            if (!reached[v]) continue;
 
             __int128 next_potential = (__int128)potential[v] + distance[v];
 

@@ -4,13 +4,23 @@ C++23向けの自作競技プログラミングライブラリ。
 
 ## 管理資料
 
-- [命名・APIカタログ](docs/NamingAndAPI.md)
-- [開発・更新・AC確認の手順と起動文](docs/LibraryWorkflow.md)
-- [ライブラリ開発規約](docs/LibraryDevelopmentRules.md)
-- [Competitive Programming 運用ガイド](docs/CompetitiveProgrammingGuide.md)
-- [DebugRules](docs/DebugRules.md)
+- [命名・APIカタログ](Rule/NamingAndAPI.md)
+- [開発・更新・AC確認の手順と起動文](Rule/LibraryWorkflow.md)
+- [ライブラリ開発規約](Rule/LibraryDevelopmentRules.md)
+- [Competitive Programming 運用ガイド](Rule/CompetitiveProgrammingGuide.md)
+- [DebugRules](Rule/DebugRules.md)
+- [AIの作業指示](AGENTS.md)
+- [Projectの指示に設定する全文](Rule/ProjectInstructions.md)
+- [検証・AC・採用記録](records/LibraryStatus.md)
+- [開発作業の記録](records/DevelopmentLog.md)
+- [スニペット生成規約とVS Codeへの取り込み方](Rule/SnippetRules.md)
+- [現在の全スニペット](snippets/competitive_programming.code-snippets)
+- [AtCoderテンプレート](templates/AtCoder.cpp)
+- [自動テストの説明](tests/README.md)
 
-規約本文はChatGPT Libraryの最新版を正とし、上の規約文書は同内容の写し。ソースとAPIカタログの正式版はこのリポジトリ。
+ソース・規約・APIカタログ・テスト・開発／AC記録の正式版は、このリポジトリのmain。ChatGPT側への常設アップロードは不要。
+
+Workで欲しい機能や修正内容を伝え、提示された関数名と仕様を承認すると、AIが実装・検証・スニペット生成・資料更新・コミット・GitHub反映まで行う。push・PRごとにGitHub Actionsがカタログ、スニペット、C++23と保存済みテストを確認する。
 
 ## Data Structure
 

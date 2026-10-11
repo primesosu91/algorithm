@@ -30,7 +30,7 @@ PascalCaseを使用する。
 例：
 
 ```cpp
-struct DSU;
+struct UnionFind;
 struct LCA;
 struct SCC;
 struct FenwickTree;
@@ -53,7 +53,7 @@ range_sum(left, right);
 component_size(v);
 ```
 
-具体的な操作名・引数順序・返り値は、GitHubの [`docs/NamingAndAPI.md`](https://github.com/primesosu91/algorithm/blob/main/docs/NamingAndAPI.md) と関連する既存ソースコードを設計前に確認する。
+具体的な操作名・引数順序・返り値は、GitHubの [`Rule/NamingAndAPI.md`](https://github.com/primesosu91/algorithm/blob/main/Rule/NamingAndAPI.md) と関連する既存ソースコードを設計前に確認する。
 
 同じ意味の操作は既存の名前を優先する。ただし、アルゴリズム固有の慣習や意味の違いによる合理的な例外は維持し、理由をカタログに記録する。既存APIの事後的な改名は行わない。
 
@@ -103,7 +103,7 @@ template<class T>
 例：
 
 ```cpp
-DSU dsu(n);
+UnionFind uf(n);
 FenwickTree<long long> fw(n);
 ```
 
@@ -237,7 +237,7 @@ AtCoderに限定せず、Library Checkerなど、対象ライブラリの実装�
 
 正式採用を確認するため、最初にACした問題を1件記録する。
 
-この使用履歴はライブラリ本体には書かず、ユーザーが別途管理する。
+この使用履歴はライブラリ本体には書かず、GitHubの `records/LibraryStatus.md` にAIが記録する。
 
 正式採用済みライブラリに動作へ影響する変更を加えた場合は、状態を再び「検証中」に戻す。
 
@@ -252,17 +252,13 @@ AtCoderに限定せず、Library Checkerなど、対象ライブラリの実装�
 
 ## 14. 保存と原本
 
-ライブラリの唯一の正式なソースコードの原本（Single Source of Truth）はGitHubの [`primesosu91/algorithm`](https://github.com/primesosu91/algorithm) とする。
+ソースコード、規約、命名・APIカタログ、手順、テンプレート、スニペット、テスト、作業・AC記録の唯一の正式な保存先はGitHubの [`primesosu91/algorithm`](https://github.com/primesosu91/algorithm) の `main` とする。
 
-全ライブラリをChatGPTへ個別アップロードし、参照用コピーを常設する運用は原則として廃止する。命名・APIカタログと関連するGitHubの最新版ソースを直接参照する。
+ChatGPT LibraryやProjectへの常設ファイルは必要ない。作業時に必要な内容をGitHubから取得する。以前の添付・チャット履歴と最新実装に差異がある場合は、最新実装を正とする。取得できない情報を記憶で補わず、未確認事項を明示する。
 
-`UnionFind.cpp` は代表的な設計・記述スタイルの基準とする。ChatGPT側に常設する場合も参照用コピーであり、設計・修正前にはGitHub版との一致を確認する。
+`UnionFind.cpp` は代表的な設計・記述スタイルの基準であり、設計前にGitHubの確認版を読む。
 
-GitHubの最新版とカタログ、チャット履歴、ChatGPT側のコピーに差異がある場合は、必ずGitHubの最新版ソースを正とする。確認できない情報を記憶から補完しない。アクセスできない場合は未確認事項を明示し、該当作業に必要なファイルだけを一時的に提示してもらう。
-
-GitHubのREADMEは原則として、カテゴリ別にライブラリへのリンクを並べる目次として使用する。
-
-採用状態やAC履歴などの管理情報をREADMEに記載することは必須としない。
+READMEはカテゴリ別の目次として使い、規約・APIの本文を重複掲載しない。AC・採用記録は `records/LibraryStatus.md`、作業記録は `records/DevelopmentLog.md` に置く。
 
 ## 15. バージョン管理
 
@@ -272,7 +268,7 @@ GitHubのREADMEは原則として、カテゴリ別にライブラリへのリ�
 
 ## 16. 既存ライブラリとの統一
 
-新しいライブラリを作成・既存ライブラリを修正するとき、設計前にGitHubの `docs/NamingAndAPI.md`、最新の `data_structure/UnionFind.cpp`、対象と関連する既存ソースコードを確認し、それらとの統一性を確認する。カタログだけで実装の確認を代替しない。
+新しいライブラリを作成・既存ライブラリを修正するとき、設計前にGitHubの `Rule/NamingAndAPI.md`、最新の `data_structure/UnionFind.cpp`、対象と関連する既存ソースコードを確認し、それらとの統一性を確認する。カタログだけで実装の確認を代替しない。
 
 特に以下を確認する。
 
@@ -287,14 +283,41 @@ GitHubのREADMEは原則として、カテゴリ別にライブラリへのリ�
 
 ただし、既存ライブラリに問題がある場合は無条件に踏襲せず、その問題を明示して改善案を提示する。
 
-新規ライブラリの完成後、および既存の公開API・前提条件・返り値の意味が変わった後は、`docs/NamingAndAPI.md` の一覧、該当API、例外、確認したソースのblob SHAを更新する。原則としてソースとカタログを同じコミットで同期する。コメント・空白だけの変更でも、内容を照合して確認SHAを更新する。
+新規ライブラリの完成後、および既存の公開API・前提条件・返り値の意味が変わった後は、`Rule/NamingAndAPI.md` の一覧、該当API、例外、確認したソースのblob SHAを更新する。原則としてソースとカタログを同じコミットで同期する。コメント・空白だけの変更でも、内容を照合して確認SHAを更新する。
 
 既存APIの破壊的変更には第10節の説明とユーザーの明示的な了承が必要である。カタログ整備だけを理由に既存コード・公開APIを変更しない。
 
 ## 17. 管理資料と運用手順
 
-- 詳細な規約本文はChatGPT Libraryの最新版を正とする。GitHubの `docs/LibraryDevelopmentRules.md`、`docs/CompetitiveProgrammingGuide.md`、`docs/DebugRules.md` は同内容の参照用写しとし、規約改訂時に同期する。
-- 命名・API参照の中核資料はGitHubの `docs/NamingAndAPI.md` とする。ソースとの不一致は最新版ソースを確認してカタログを修正する。
-- 実際の作業順、Gitコマンド、再利用できる起動文は [`docs/LibraryWorkflow.md`](https://github.com/primesosu91/algorithm/blob/main/docs/LibraryWorkflow.md) を参照する。手順書は本規約・運用ガイドの要求を変更しない。
+- 規約の正式版は本書、[運用ガイド](CompetitiveProgrammingGuide.md)、[DebugRules](DebugRules.md)。すべて `Rule/` で管理する。
+- 命名・API参照は [NamingAndAPI.md](NamingAndAPI.md) と対象・関連ソースを使う。ソースとの不一致は実装を読んでカタログを修正する。
+- 日常の作業順と依頼例は [LibraryWorkflow.md](LibraryWorkflow.md)、スニペット仕様は [SnippetRules.md](SnippetRules.md) を参照する。
+- AIの入口は [AGENTS.md](../AGENTS.md)。Projectに置く固定指示は [ProjectInstructions.md](ProjectInstructions.md) にまとめる。
+- 既存資料の削除・移動は対象を確認し、明示的な依頼の範囲で行う。今回の `docs/` 廃止と `Rule/` への再構成はユーザーが了承した移行である。Gitの履歴は維持する。
 
-改訂記録: 2026-10-12 — ソースのGitHub直接参照、命名・APIカタログ、更新手順を追加。従来の実装・テスト・採用・破壊的変更の要件は維持する。
+## 18. 設計承認と自動処理
+
+新規作成も既存ソースの修正も、次の順序を基本とする。
+
+1. ユーザーが必要なライブラリ・機能・修正内容を伝える。
+2. AIが最新mainのコミットを確認し、その版の規約、カタログ、UnionFind、対象・関連ソースを実際に読む。
+3. AIが公開型・関数の完全なシグネチャ、意味、引数、返り値、前提、計算量、既存設計との対応を提示する。修正なら変更箇所・既存APIへの影響も示す。
+4. ユーザーがその案を明示的に承認する。新規作成・ソース変更は、この承認前に実装・GitHub反映しない。原因調査、反例の再現、設計案の作成は進めてよい。
+5. 承認後、AIが実装、C++23での必要な検証、カタログ・スニペット・記録更新、コミット、GitHubへの反映まで行う。通常のGit操作について再度の承認を求めず、ユーザーにコマンド入力を求めない。
+6. 完了時にコミットURL、変更内容、使い方・最小例・計算量、検証結果、AC・採用状態を報告する。
+
+承認した仕様や変更範囲を変える必要が生じた場合は、新しい案を説明して了承を得る。破壊的変更の説明・明示的承認は第10節の要件を満たす形で設計承認に含める。
+
+ユーザーが具体的な変更を了承し、案の提示と承認を省略するよう明示した場合、または今回の環境整備のように既存ソースの必要な修正まで一括して許可した場合は、その範囲内で再度の承認を求めない。通常運用では必ず設計案の承認を経る。
+
+AC報告だけの記録更新や承認済み環境の保守は、公開API案を再承認する対象ではない。未指定で結果を左右する条件は、必要な情報だけ確認する。
+
+## 19. スニペットの同期
+
+- [templates/AtCoder.cpp](../templates/AtCoder.cpp) を先頭の `!atcoder` とし、`solve()` の最初の行へカーソルを置く。
+- 各ライブラリは、先頭の `#include <bits/stdc++.h>` と `using namespace std;` の2行だけを除いた全文を使う。
+- 残る改行・空行・コメント・インデントを維持する。スニペットのエスケープ後も、展開される文字列が元の全文と一致するよう確認する。
+- 名前はファイル名から拡張子を除いたもの、prefixは `!` と名前の連結。各項目には `prefix` と `body` だけを置く。
+- スニペットはソースから生成し、ソース・カタログ・必要なテストと原則同じコミットへまとめる。詳細は [SnippetRules.md](SnippetRules.md)。
+
+改訂日: 2026-10-12（日本時間）。従来の実装・検証・正式採用・破壊的変更の条件を引き継ぎ、正式保存先のGitHub一本化、Ruleへの再構成、設計承認後の自動反映、スニペット同期を追加。
