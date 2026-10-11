@@ -2,7 +2,7 @@
 """Read-only C++23 checks, shared by local execution and GitHub Actions.
 
 Checks documentation, parses each library independently, and builds/runs saved
-regression programs. It neither submits to a judge nor changes adoption status.
+regression programs. Online judge submission is outside this check.
 """
 
 import argparse
@@ -26,7 +26,6 @@ REQUIRED = (
     'Rule/README.md',
     'Rule/SnippetRules.md',
     'Rule/ProjectInstructions.md',
-    'records/LibraryStatus.md',
     'records/DevelopmentLog.md',
     'templates/AtCoder.cpp',
     'snippets/competitive_programming.code-snippets',
@@ -132,7 +131,7 @@ def main():
     mode = 'ASan/UBSan' if args.sanitizers else 'standard'
     syntax = 'reused' if args.skip_syntax else str(len(libraries))
     print(f'OK: documentation and {len(build_snippets(root))} snippets; '
-          f'C++23 syntax {syntax}; {len(tests)} regression programs ({mode}). AC is not checked.')
+          f'C++23 syntax {syntax}; {len(tests)} regression programs ({mode}).')
     return 0
 
 

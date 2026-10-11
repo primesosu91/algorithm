@@ -2,7 +2,7 @@
 """Check catalog coverage, reviewed Git blob IDs, and relative Markdown links.
 
 Standard library only. This is a documentation consistency check, not a C++
-parser, correctness test, or acceptance-status check. No files are modified.
+parser or correctness test. No files are modified.
 """
 
 import hashlib
